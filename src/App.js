@@ -8,7 +8,7 @@ import {
 
 import Header from "./header/header";
 import Memory from "./memory/memory";
-import Memory2 from "./memory/memory2";
+import MakeNewMemory from "./memory/makeNewMemory";
 
 // 조각집 헤더가 모든 페이지에 있어서 고정하고 그 아래에 내용 넣도록 레이아웃 설정
 function ProtectedLayout() {
@@ -42,7 +42,7 @@ function App() {
               url은 path안에 넣고 보여줄 화면을 element 안에 넣어주시면 됩니다! 일단 테스트로 2개 정도 넣어놓았습니다! */}
 
           <Route path="/Home" element={<Memory />} />
-          <Route path="/Home2" element={<Memory2 />} />
+          <Route path="/newMemory" element={<MakeNewMemory />} />
         </Route>
       </Routes>
     </Router>

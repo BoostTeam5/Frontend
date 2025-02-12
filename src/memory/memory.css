@@ -3,28 +3,30 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  margin: 0 auto; /* 가운데 정렬 */
+  width: 100%;
+  margin: 0 auto;
 }
 
 .clickedGroupInfo {
   display: flex;
-  gap: 20px; /* 이미지와 텍스트 간격 */
-  width: 100%;
+  justify-content: space-between; /* 이미지, 텍스트, 버튼을 양쪽으로 정렬 */
+  align-items: flex-start;
+  width: 80%;
+  padding: 20px;
 }
 
 .groupImageDesign img {
   width: 300px;
   height: auto;
-  border-radius: 10px; /* 이미지 둥글게 */
+  border-radius: 10px;
   object-fit: cover;
 }
 
 .groupInfo-text {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* 내부 요소 왼쪽 정렬 */
-  justify-content: flex-start; /* 내부 요소 위쪽 정렬 */
+  align-items: flex-start;
+  justify-content: center;
   flex: 1;
 }
 
@@ -39,11 +41,6 @@
   font-weight: bold;
   margin-bottom: 10px;
   display: flex;
-  gap: 20px;
-}
-
-.info2 span {
-  margin-bottom: 5px;
   gap: 10px;
 }
 
@@ -51,8 +48,52 @@
   font-size: 16px;
   color: #333;
   line-height: 1.4;
+  margin-bottom: 10px;
 }
 
-.likeBtn {
-  width: 300px;
+/* 획득 배지 */
+.badge-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.badge {
+  background: #f5f5f5;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 오른쪽 버튼 컨테이너 */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.text-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+}
+
+.text-button:hover {
+  text-decoration: underline;
+}
+
+.like-button img {
+  width: 200px;
+  height: 50px;
+}
+
+/* 구분선 */
+.divider img {
+  width: 100%;
+  margin-top: 20px;
 }
