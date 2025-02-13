@@ -33,14 +33,14 @@
 }
 
 /* 입력 필드 스타일 */
-label {
+.modal-content label {
   display: block;
   margin-top: 15px;
   font-weight: bold;
 }
 
-input,
-textarea {
+.modal-content input,
+.modal-content textarea {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
