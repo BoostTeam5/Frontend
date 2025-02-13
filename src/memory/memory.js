@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import GroupEditModal from "./groupEditModal";
 import GroupDeleteModal from "./groupDeleteModal";
 import defaultImg from "../assets/family.png";
 import line from "../assets/line.png";
 import likeBtn from "../assets/likeBtn.png";
 import addMemory from "../assets/addMemory.png";
-import MakeNewMemory from "./makeNewMemory";
+import public_active from "../assets/public_active.png";
+import public_default from "../assets/public_default.png";
+import private_active from "../assets/private_active.png";
+import private_default from "../assets/private_default.png";
 import "./groupEditModal.css";
 import "./memory.css";
 
@@ -18,11 +21,15 @@ function Memory() {
   // 특정 그룹 정보 렌더링
   const [groupName, setGroupName] = useState("");
   const [groupImg, setGroupImg] = useState();
+  // 그룹의 정보 수정시 필요한 각각의 정보
   const [groupIntro, setGroupIntro] = useState("");
   const [isGroupOpen, setIsGroupOpen] = useState(true);
   const [likeCount, setLikeCount] = useState(0);
   const [badges, setBadges] = useState([]);
   const [postCount, setPostCount] = useState(0);
+  // 공개 비공개 필터링
+  const [isPublic, setIsPublic] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
 
   // 그룹 수정, 삭제
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -36,10 +43,26 @@ function Memory() {
     setIsMakeMemoryOpen(true);
   };
 
+  // 추억 만들기 버튼 클릭시 추억 생성 페이지로 이동
   const navigate = useNavigate();
   const GoToMemory = () => {
     navigate("/newMemory");
   };
+
+  // 공개 비공개 버튼 클릭 핸들러
+  const handleToPublicActive = () => {
+    setIsPublic(true);
+  };
+  const handleToPublicDefault = () => {
+    setIsPublic(false);
+  };
+  const handleToPrivateActive = () => {
+    setIsPrivate(true);
+  };
+  const handleToPrivateDefault = () => {
+    setIsPrivate(false);
+  };
+
   /* useEffect로 데이터 가져오기 */
   useEffect(() => {});
 
@@ -168,17 +191,47 @@ function Memory() {
             GoToMemory();
           }}
         />
-        {isEditModalOpen && (
-          <GroupEditModal
-            onClose={() => setIsEditModalOpen(false)}
-            onSubmit={handleUpdateGroup}
-            currentData={{ groupName, groupImg, groupIntro, isGroupOpen }}
-          />
-        )}
-        {isDeleteModalOpen && (
-          <GroupDeleteModal onClose={() => setIsDeleteModalOpen(false)} />
-        )}
+        {/* 공개 여부 버튼 + 검색 창 + 필터창 */}
+        <div className="filter-tab">
+          <div className="set-public">
+            {isPublic ? (
+              <img
+                src={public_active}
+                onClick={handleToPublicDefault}
+                alt="공개"
+              />
+            ) : (
+              <img
+                src={public_default}
+                onClick={handleToPublicActive}
+                alt="비공개"
+              />
+            )}
+
+            {isPrivate ? (
+              <img src={private_active} onClick={handleToPrivateDefault}></img>
+            ) : (
+              <img src={private_default} onClick={handleToPrivateActive}></img>
+            )}
+          </div>
+
+          <div className="searchBar"></div>
+
+          <div className="filter-memory"></div>
+        </div>
       </div>
+
+      {/* 모달 설정 창 */}
+      {isEditModalOpen && (
+        <GroupEditModal
+          onClose={() => setIsEditModalOpen(false)}
+          onSubmit={handleUpdateGroup}
+          currentData={{ groupName, groupImg, groupIntro, isGroupOpen }}
+        />
+      )}
+      {isDeleteModalOpen && (
+        <GroupDeleteModal onClose={() => setIsDeleteModalOpen(false)} />
+      )}
     </div>
   );
 }
