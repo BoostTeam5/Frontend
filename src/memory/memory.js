@@ -43,7 +43,7 @@ function Memory() {
   const [isMakeMemoryOpen, setIsMakeMemoryOpen] = useState(false);
 
   // 추억 개수
-  const [countMemory, setCountMemory] = useState(0);
+  const [countMemory, setCountMemory] = useState(3);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
@@ -75,7 +75,7 @@ function Memory() {
   // 태그 혹은 제목으로 검색하기
   const handleSearch = () => {};
 
-  /* useEffect로 데이터 가져오기 */
+  /* useEffect로 모든 게시글 데이터 가져오기 */
   useEffect(() => {});
 
   const OpacityButton = ({ src, onClick }) => {
@@ -247,18 +247,43 @@ function Memory() {
         </div>
 
         {/* 목록 + 더보기 버튼 */}
+        {/*api 연동 ver
+        
         <div className="memory-list">
-          {isPublic === true && countMemory === 0 ? (
-            <img src={noMemory} />
-          ) : (
-            <div className="memory-item">
-              <div>달봉이아들 | 비공개</div>
-              <div>에델바이스 꽃말이 소중한 추억이래요</div>
-              <div>
-                <img src={likeCountImg}></img> <text>120</text>
-                <img src={comment}></img> <text>8</text>
+        {posts.length > 0 ? (
+          posts.map((post, index) => (
+            <div key={index} className="memory-item">
+              <div className="memory-content">
+                <div className="memory-meta">{post.author} | {post.isPublic ? "공개" : "비공개"}</div>
+                <div className="memory-title">{post.title}</div>
+                <div className="memory-stats">
+                  <img src={likeCountImg} alt="likes" /> <span>{post.likes}</span>
+                  <img src={comment} alt="comments" /> <span>{post.comments}</span>
+                </div>
               </div>
             </div>
+          ))
+        ) : (
+          <p>등록된 추억이 없습니다.</p>
+        )}
+      </div>
+    </div>
+        
+        */}
+        <div className="memory-list">
+          {countMemory !== 0 ? (
+            <div className="memory-item">
+              <div>
+                <div>달봉이아들 | 비공개</div>
+                <div>에델바이스 꽃말이 소중한 추억이래요</div>
+                <div>
+                  <img src={likeCountImg}></img> <text>120</text>
+                  <img src={comment}></img> <text>8</text>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <img src={noMemory} />
           )}
         </div>
 
