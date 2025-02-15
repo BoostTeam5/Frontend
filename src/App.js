@@ -9,6 +9,7 @@ import {
 import Header from "./header/header";
 import Memory from "./memory/memory";
 import MakeNewMemory from "./memory/makeNewMemory";
+import CheckPwForPrivate from "./memory/authorizePrivate";
 
 // 조각집 헤더가 모든 페이지에 있어서 고정하고 그 아래에 내용 넣도록 레이아웃 설정
 function ProtectedLayout() {
@@ -43,6 +44,7 @@ function App() {
 
           <Route path="/Home" element={<Memory />} />
           <Route path="/newMemory" element={<MakeNewMemory />} />
+          <Route path="/privateMemory" element={<CheckPwForPrivate />} />
         </Route>
       </Routes>
     </Router>

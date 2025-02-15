@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Button } from "react";
 import { useNavigate } from "react-router-dom";
 import GroupEditModal from "./groupEditModal";
 import GroupDeleteModal from "./groupDeleteModal";
@@ -10,6 +10,10 @@ import public_active from "../assets/public_active.png";
 import public_default from "../assets/public_default.png";
 import private_active from "../assets/private_active.png";
 import private_default from "../assets/private_default.png";
+import noMemory from "../assets/no_memory_alert.png";
+import search from "../assets/search.png";
+import comment from "../assets/comment-count.png";
+import likeCountImg from "../assets/flower-like.png";
 import "./groupEditModal.css";
 import "./memory.css";
 
@@ -38,6 +42,11 @@ function Memory() {
   // 추억 만들기 버튼
   const [isMakeMemoryOpen, setIsMakeMemoryOpen] = useState(false);
 
+  // 추억 개수
+  const [countMemory, setCountMemory] = useState(0);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
   // 추억 만들기 버튼
   const handleMakeMemory = () => {
     setIsMakeMemoryOpen(true);
@@ -62,6 +71,9 @@ function Memory() {
   const handleToPrivateDefault = () => {
     setIsPrivate(false);
   };
+
+  // 태그 혹은 제목으로 검색하기
+  const handleSearch = () => {};
 
   /* useEffect로 데이터 가져오기 */
   useEffect(() => {});
@@ -183,42 +195,74 @@ function Memory() {
         <img src={line} alt="구분선" />
       </div>
 
-      <div className="memory">
-        <p>추억 목록</p>
-        <OpacityButton
-          src={addMemory}
-          onClick={() => {
-            GoToMemory();
-          }}
-        />
-        {/* 공개 여부 버튼 + 검색 창 + 필터창 */}
-        <div className="filter-tab">
-          <div className="set-public">
-            {isPublic ? (
-              <img
-                src={public_active}
-                onClick={handleToPublicDefault}
-                alt="공개"
-              />
-            ) : (
-              <img
-                src={public_default}
-                onClick={handleToPublicActive}
-                alt="비공개"
-              />
-            )}
+      <div className="memory-container">
+        {/* 제목 */}
+        <div className="memory-header">
+          <h2 className="memory-title">추억 목록</h2>
+          <button
+            className="add-memory-btn"
+            onClick={() => navigate("/newMemory")}
+          >
+            추억 만들기
+          </button>
+        </div>
 
-            {isPrivate ? (
-              <img src={private_active} onClick={handleToPrivateDefault}></img>
-            ) : (
-              <img src={private_default} onClick={handleToPrivateActive}></img>
-            )}
+        {/* 필터 + 검색 */}
+        <div className="memory-filter-container">
+          <div className="filter-buttons">
+            <img
+              src={isPublic ? public_active : public_default}
+              onClick={isPublic ? handleToPublicDefault : handleToPublicActive}
+              alt="공개"
+            />
+            <img
+              src={isPrivate ? private_active : private_default}
+              onClick={
+                isPrivate ? handleToPrivateDefault : handleToPrivateActive
+              }
+              alt="비공개"
+            />
           </div>
 
-          <div className="searchBar"></div>
+          <div className="search-bar">
+            <img src={search} alt="검색 아이콘" />
+            <input type="text" placeholder="태그 혹은 제목을 입력해주세요" />
+          </div>
 
-          <div className="filter-memory"></div>
+          <div className="dropdown">
+            <button className="dropdown-btn" onClick={toggleDropdown}>
+              공감순
+              <span>▼</span>
+            </button>
+
+            {dropdownOpen && (
+              <ul className="dropdown-menu">
+                <li>최신순</li>
+                <li>게시글 많은 순</li>
+                <li>공감순</li>
+                <li>획득 뱃지순</li>
+              </ul>
+            )}
+          </div>
         </div>
+
+        {/* 목록 + 더보기 버튼 */}
+        <div className="memory-list">
+          {isPublic === true && countMemory === 0 ? (
+            <img src={noMemory} />
+          ) : (
+            <div className="memory-item">
+              <div>달봉이아들 | 비공개</div>
+              <div>에델바이스 꽃말이 소중한 추억이래요</div>
+              <div>
+                <img src={likeCountImg}></img> <text>120</text>
+                <img src={comment}></img> <text>8</text>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <button className="load-more-btn">더보기</button>
       </div>
 
       {/* 모달 설정 창 */}
@@ -232,6 +276,8 @@ function Memory() {
       {isDeleteModalOpen && (
         <GroupDeleteModal onClose={() => setIsDeleteModalOpen(false)} />
       )}
+
+      {/*추억 개수에 따른 것*/}
     </div>
   );
 }
