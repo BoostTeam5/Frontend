@@ -14,13 +14,19 @@ const GlobalStyle = createGlobalStyle`
 
 function MemoryDetail() {
   return (
-    <>
+    <div>
       <GlobalStyle />
-      <div style={{ padding: "50px" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <MemoryInfo />
         <CommentList />
       </div>
-    </>
+    </div>
   );
 }
 

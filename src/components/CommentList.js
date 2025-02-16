@@ -62,7 +62,7 @@ function CommentItem({ comment, onEdit, onDelete, onSubmit }) {
       >
         <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
           <span>{comment.nickname}</span>
-          <span>{comment.createdAt}</span>
+          <span style={{ color: "#b8b8b8" }}>{comment.createdAt}</span>
         </div>
         <div
           style={{
@@ -76,13 +76,13 @@ function CommentItem({ comment, onEdit, onDelete, onSubmit }) {
               src={editIcon}
               alt="댓글 수정"
               onClick={handleEdit}
-              style={{ cursor: "pointer" }}
+              style={{ width: "20px", cursor: "pointer" }}
             />
             <img
               src={deleteIcon}
               alt="댓글 삭제"
               onClick={handleDelete}
-              style={{ cursor: "pointer" }}
+              style={{ width: "20px", cursor: "pointer" }}
             />
           </div>
         </div>

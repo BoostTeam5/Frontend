@@ -58,7 +58,7 @@ function MemoryInfo({ onEdit, onDelete }) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        maxWidth: "100%",
+        maxWidth: "100vw",
       }}
     >
       <div>
@@ -66,19 +66,21 @@ function MemoryInfo({ onEdit, onDelete }) {
           <div style={{ display: "flex", gap: "20px" }}>
             <span>{memory.nickname}</span>
             <span>|</span>
-            <span>{memory.isPublic ? "공개" : "비공개"}</span>
+            <span style={{ color: "#8d8d8d" }}>
+              {memory.isPublic ? "공개" : "비공개"}
+            </span>
           </div>
-          <div>
+          <div style={{ display: "flex", gap: "40px" }}>
             <TextButton onClick={handleEdit} style={{ color: "#282828" }}>
               추억 수정하기
             </TextButton>
-            <TextButton onClick={handleDelete} style={{ color: "#787878" }}>
+            <TextButton onClick={handleDelete} style={{ color: "#8d8d8d" }}>
               추억 삭제하기
             </TextButton>
           </div>
         </div>
         <h2>{memory.title}</h2>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px", color: "#b8b8b8" }}>
           {memory.tags.map((tag, idx) => (
             <span key={idx}>#{tag}</span>
           ))}
@@ -94,24 +96,28 @@ function MemoryInfo({ onEdit, onDelete }) {
             style={{
               display: "flex",
               gap: "20px",
+              alignItems: "center",
               marginTop: "50px",
               marginBottom: "10px",
             }}
           >
             <span>{memory.location}</span>
             <span>{memory.moment} 18:00</span>
-            <span>
-              <img src={flowerImg} alt="공감수" /> {memory.likeCount}
-            </span>
-            <span>
-              <img src={replyCountImg} alt="댓글수" /> {memory.commentCount}
-            </span>
+
+            <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
+              <img src={flowerImg} alt="공감수" style={{ width: "25px" }} />{" "}
+              <span style={{ color: "#8d8d8d" }}>{memory.likeCount}</span>
+            </div>
+            <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
+              <img src={replyCountImg} alt="댓글수" style={{ width: "25px" }} />
+              <span style={{ color: "#8d8d8d" }}>{memory.commentCount}</span>
+            </div>
           </div>
           <img
             src={likeBtn}
             alt="공감 보내기 버튼"
             onClick={handleLikeClick}
-            style={{ cursor: "pointer" }}
+            style={{ width: "180px", cursor: "pointer" }}
           />
         </div>
         <img src={line} alt="구분선" />
