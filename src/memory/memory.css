@@ -194,12 +194,13 @@
 }
 
 .load-more-btn {
+  border: 1px solid #282828;
   margin-top: 20px;
   padding: 10px 20px;
   border: none;
-  background: #007bff;
-  color: white;
-  border-radius: 10px;
+  background: #fafafa;
+  color: black;
+  border-radius: 10px black;
   cursor: pointer;
 }
 

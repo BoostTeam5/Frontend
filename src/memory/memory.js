@@ -18,7 +18,7 @@ import "./groupEditModal.css";
 import "./memory.css";
 
 function Memory() {
-  // 공개 비공개 그룹별 데이터 저장
+  // 공개 비공개 그룹별 api에서 isPublic 속성에 따라서 데이터 분류하고 저장
   const [memoryOpenItems, setMemoryOpenItems] = useState();
   const [memoryClosedItems, setMemoryClosedItems] = useState();
 
