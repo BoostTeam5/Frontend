@@ -75,7 +75,7 @@ function CreateGroup() {
 
   return (
     <>
-      <Header /> {/* ✅ 헤더 추가 */}
+      <Header /> {/* 헤더 추가 */}
       <div className="create-group-container">
         {errorMessage && <p className="error-text">{errorMessage}</p>}
 
