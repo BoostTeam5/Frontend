@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Header from "../components/Header";
-import "./CreateGroupPage.css";
+import Header from "../header/header";
+import "../style/CreateGroup.css";
 
 function CreateGroup() {
   const [groupName, setGroupName] = useState("");
@@ -75,7 +75,7 @@ function CreateGroup() {
 
   return (
     <>
-      <Header /> {/* 헤더 추가 */}
+      {/* <Header /> 헤더 추가 */}
       <div className="create-group-container">
         {errorMessage && <p className="error-text">{errorMessage}</p>}
 
@@ -121,4 +121,3 @@ function CreateGroup() {
 }
 
 export default CreateGroup;
-

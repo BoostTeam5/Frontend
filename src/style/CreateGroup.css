@@ -7,13 +7,14 @@
   background: #fff;
 }
 
-label {
+.create-group-container label {
   font-weight: bold;
   display: block;
   margin-top: 10px;
 }
 
-input, textarea {
+.create-group-container input,
+.create-group-container textarea {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
@@ -21,7 +22,7 @@ input, textarea {
   border-radius: 4px;
 }
 
-button {
+.create-group-container button {
   width: 100%;
   margin-top: 15px;
   padding: 10px;
@@ -31,7 +32,7 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.create-group-container button:hover {
   background: #0056b3;
 }
 
