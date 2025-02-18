@@ -81,7 +81,9 @@ function Memory() {
   };
 
   // 태그 혹은 제목으로 검색하기
-  const handleSearch = () => {};
+  const handleKeywordChange = (event) => {
+    setKeyword(event.target.value);
+  };
 
   /* useEffect로 그룹 정보 가져오기*/
   useEffect(() => {
@@ -160,7 +162,6 @@ function Memory() {
         );
 
         setPosts(response.data);
-        //console.log(response.data);
         console.log(posts.length);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
@@ -170,7 +171,7 @@ function Memory() {
     if (groupId) {
       fetchPosts();
     }
-  }, [groupId, page, pageSize, sortBy, keyword, isPublic, posts]); // ✅ 값이 바뀌면 자동으로 실행
+  }, [groupId, page, pageSize, sortBy, keyword, isPublic]); // ✅ 값이 바뀌면 자동으로 실행
 
   // 그룹 삭제 API
   const deleteGroupAPI = async (password) => {
@@ -327,7 +328,11 @@ function Memory() {
 
           <div className="search-bar">
             <img src={search} alt="검색 아이콘" />
-            <input type="text" placeholder="태그 혹은 제목을 입력해주세요" />
+            <input
+              type="text"
+              placeholder="태그 혹은 제목을 입력해주세요"
+              onChange={handleKeywordChange}
+            />
           </div>
 
           <div className="dropdown">
