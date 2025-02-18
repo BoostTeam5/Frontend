@@ -167,6 +167,23 @@ function Memory() {
     }
   }, [groupId, page, pageSize, sortBy, keyword, isPublic]); // ✅ 값이 바뀌면 자동으로 실행
 
+  const deleteGroupAPI = async (password) => {
+    try {
+      const response = await MemoryApi.deleteGroup(groupId, password); // 입력된 비밀번호 전달
+
+      if (response && response.message === "그룹 삭제 성공") {
+        alert("그룹이 삭제되었습니다.");
+        setIsDeleteModalOpen(false); // 모달 닫기
+        navigate("/"); // 삭제 후 메인 페이지 이동
+      } else {
+        alert("그룹 삭제 실패. 비밀번호를 확인해주세요.");
+      }
+    } catch (error) {
+      console.error("그룹 삭제 중 오류 발생:", error);
+      alert("그룹 삭제 중 문제가 발생했습니다.");
+    }
+  };
+
   const OpacityButton = ({ src, onClick }) => {
     return (
       <button
@@ -197,12 +214,6 @@ function Memory() {
     setGroupIntro(updatedData.groupIntro);
     setIsGroupOpen(updatedData.isPublic);
     setIsEditModalOpen(false); // 모달 닫기
-  };
-
-  const handleDeleteGroup = () => {
-    {
-      /* Delete Group API 호출하고 state 변경하고 다시 데이터로드 */
-    }
   };
 
   return (
@@ -250,9 +261,7 @@ function Memory() {
             <button
               className="text-button"
               onClick={() => {
-                {
-                  setIsEditModalOpen(true);
-                }
+                setIsEditModalOpen(true);
               }}
             >
               그룹 정보 수정하기
@@ -356,23 +365,6 @@ function Memory() {
         </div>
       </div>
 
-      {/* <div className="memory-list">
-        {countMemory !== 0 ? (
-          <div className="memory-item">
-            <div>
-              <div>달봉이아들 | 비공개</div>
-              <div>에델바이스 꽃말이 소중한 추억이래요</div>
-              <div>
-                <img src={likeCountImg}></img> <text>120</text>
-                <img src={comment}></img> <text>8</text>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <img src={noMemory} />
-        )}
-      </div> */}
-
       {isEditModalOpen && (
         <GroupEditModal
           onClose={() => setIsEditModalOpen(false)}
@@ -381,10 +373,11 @@ function Memory() {
         />
       )}
       {isDeleteModalOpen && (
-        <GroupDeleteModal onClose={() => setIsDeleteModalOpen(false)} />
+        <GroupDeleteModal
+          onClose={() => setIsDeleteModalOpen(false)}
+          onDelete={deleteGroupAPI} // 삭제 요청 함수 전달
+        />
       )}
-
-      {/*추억 개수에 따른 것*/}
     </div>
   );
 }

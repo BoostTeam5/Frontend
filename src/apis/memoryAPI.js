@@ -31,7 +31,7 @@ export const readPosts = async (
   }
 };
 
-// 그룹 수정 API
+// 그룹 수정 API   뭔가 문제있음
 export const putGroupInfo = async (groupId, updateData) => {
   try {
     const response = await api.put(`/api/groups/${groupId}`, updateData);
@@ -42,6 +42,7 @@ export const putGroupInfo = async (groupId, updateData) => {
   }
 };
 
+// 그룹 정보 가져오기
 export const readGroupInfo = async (groupId) => {
   try {
     const response = await api.get(`/api/groups/${groupId}`);
@@ -52,11 +53,25 @@ export const readGroupInfo = async (groupId) => {
   }
 };
 
+// 그룹 삭제하기
+export const deleteGroup = async (groupId, password) => {
+  try {
+    const response = await api.delete(`/api/groups/${groupId}`, {
+      data: { password }, // DELETE 요청의 body에 password 포함
+    });
+    return response.data; // 성공하면 응답 반환
+  } catch (error) {
+    console.error("failed to delete Group", error);
+    throw error;
+  }
+};
+
 const MemoryApi = {
   createPost,
   readPosts,
   putGroupInfo,
   readGroupInfo,
+  deleteGroup,
 };
 
 export default MemoryApi;
