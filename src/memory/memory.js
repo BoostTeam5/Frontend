@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Button } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import GroupEditModal from "./groupEditModal";
 import GroupDeleteModal from "./groupDeleteModal";
 import defaultImg from "../assets/family.png";
@@ -16,11 +16,19 @@ import comment from "../assets/comment-count.png";
 import likeCountImg from "../assets/flower-like.png";
 import "./groupEditModal.css";
 import "./memory.css";
+import MemoryApi from "../apis/memoryAPI";
+("../apis/memoryAPI");
 
 function Memory() {
+  const { groupId } = useParams(); // URL에서 가져오는 함수
+
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [sortBy, setSortBy] = useState("latest");
+  const [keyword, setKeyword] = useState("");
+
   // 공개 비공개 그룹별 api에서 isPublic 속성에 따라서 데이터 분류하고 저장
-  const [memoryOpenItems, setMemoryOpenItems] = useState();
-  const [memoryClosedItems, setMemoryClosedItems] = useState();
+  const [posts, setPosts] = useState([]);
 
   // 특정 그룹 정보 렌더링
   const [groupName, setGroupName] = useState("");
@@ -33,7 +41,7 @@ function Memory() {
   const [postCount, setPostCount] = useState(0);
   // 공개 비공개 필터링
   const [isPublic, setIsPublic] = useState(false);
-  const [isPrivate, setIsPrivate] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false); // 이거 필요없을듯 public으로 수정하기
 
   // 그룹 수정, 삭제
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -75,8 +83,28 @@ function Memory() {
   // 태그 혹은 제목으로 검색하기
   const handleSearch = () => {};
 
-  /* useEffect로 모든 게시글 데이터 가져오기 */
-  useEffect(() => {});
+  /* useEffect로 데이터 불러오기기 */
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const data = await MemoryApi.readPost(
+          groupId,
+          page,
+          pageSize,
+          sortBy,
+          keyword,
+          isPublic
+        );
+        setPosts(data);
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      }
+    };
+
+    if (groupId) {
+      fetchPosts();
+    }
+  }, [groupId, page, pageSize, sortBy, keyword, isPublic]); // ✅ 값이 바뀌면 자동으로 실행
 
   const OpacityButton = ({ src, onClick }) => {
     return (
@@ -246,63 +274,46 @@ function Memory() {
           </div>
         </div>
 
-        {/* 목록 + 더보기 버튼 */}
-        {/*api 연동 ver
-        
         <div className="memory-list">
-        {posts.length > 0 ? (
-          posts.map((post, index) => (
-            <div key={index} className="memory-item">
-              <div className="memory-content">
-                <div className="memory-meta">{post.author} | {post.isPublic ? "공개" : "비공개"}</div>
-                <div className="memory-title">{post.title}</div>
-                <div className="memory-stats">
-                  <img src={likeCountImg} alt="likes" /> <span>{post.likes}</span>
-                  <img src={comment} alt="comments" /> <span>{post.comments}</span>
+          {posts.length > 0 ? (
+            posts.map((post, index) => (
+              <div key={index} className="memory-item">
+                <div className="memory-content">
+                  <div className="memory-meta">
+                    {post.author} | {post.isPublic ? "공개" : "비공개"}
+                  </div>
+                  <div className="memory-title">{post.title}</div>
+                  <div className="memory-stats">
+                    <img src={likeCountImg} alt="likes" />{" "}
+                    <span>{post.likes}</span>
+                    <img src={comment} alt="comments" />{" "}
+                    <span>{post.comments}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p>등록된 추억이 없습니다.</p>
-        )}
-      </div>
-    </div>
-        
-        */}
-        <div className="memory-list">
-          {countMemory !== 0 ? (
-            <div className="memory-item">
-              <div>
-                <div>달봉이아들 | 비공개</div>
-                <div>에델바이스 꽃말이 소중한 추억이래요</div>
-                <div>
-                  <img src={likeCountImg}></img> <text>120</text>
-                  <img src={comment}></img> <text>8</text>
-                </div>
-              </div>
-            </div>
+            ))
           ) : (
             <img src={noMemory} />
           )}
         </div>
-
-        <button className="load-more-btn">더보기</button>
       </div>
 
-      {/* 모달 설정 창 */}
-      {isEditModalOpen && (
-        <GroupEditModal
-          onClose={() => setIsEditModalOpen(false)}
-          onSubmit={handleUpdateGroup}
-          currentData={{ groupName, groupImg, groupIntro, isGroupOpen }}
-        />
-      )}
-      {isDeleteModalOpen && (
-        <GroupDeleteModal onClose={() => setIsDeleteModalOpen(false)} />
-      )}
-
-      {/*추억 개수에 따른 것*/}
+      {/* <div className="memory-list">
+        {countMemory !== 0 ? (
+          <div className="memory-item">
+            <div>
+              <div>달봉이아들 | 비공개</div>
+              <div>에델바이스 꽃말이 소중한 추억이래요</div>
+              <div>
+                <img src={likeCountImg}></img> <text>120</text>
+                <img src={comment}></img> <text>8</text>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <img src={noMemory} />
+        )}
+      </div> */}
     </div>
   );
 }
