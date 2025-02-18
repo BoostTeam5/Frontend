@@ -83,7 +83,7 @@ function Memory() {
   // 태그 혹은 제목으로 검색하기
   const handleSearch = () => {};
 
-  /* useEffect로 그룹의 정보 가져오기*/
+  /* useEffect로 그룹 정보 가져오기*/
   useEffect(() => {
     const fetchGroup = async () => {
       try {
@@ -100,6 +100,10 @@ function Memory() {
     }
   }, [groupId]);
   console.log(`post count is ${group.postCount}`);
+
+  useEffect(() => {
+    console.log(`현재 posts 개수: ${posts.length}`);
+  }, [posts]); // posts 변경 시 실행
 
   // 그룹 정보 수정하기
   // useEffect(() => {
@@ -146,7 +150,7 @@ function Memory() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const data = await MemoryApi.readPosts(
+        const response = await MemoryApi.readPosts(
           groupId,
           page,
           pageSize,
@@ -155,8 +159,9 @@ function Memory() {
           isPublic
         );
 
-        setPosts(data);
-        console.log(data);
+        setPosts(response.data);
+        //console.log(response.data);
+        console.log(posts.length);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
       }
@@ -165,8 +170,9 @@ function Memory() {
     if (groupId) {
       fetchPosts();
     }
-  }, [groupId, page, pageSize, sortBy, keyword, isPublic]); // ✅ 값이 바뀌면 자동으로 실행
+  }, [groupId, page, pageSize, sortBy, keyword, isPublic, posts]); // ✅ 값이 바뀌면 자동으로 실행
 
+  // 그룹 삭제 API
   const deleteGroupAPI = async (password) => {
     try {
       const response = await MemoryApi.deleteGroup(groupId, password); // 입력된 비밀번호 전달
@@ -347,7 +353,7 @@ function Memory() {
               <div key={index} className="memory-item">
                 <div className="memory-content">
                   <div className="memory-meta">
-                    {post.author} | {post.isPublic ? "공개" : "비공개"}
+                    {post.nickname} | {post.isPublic ? "공개" : "비공개"}
                   </div>
                   <div className="memory-title">{post.title}</div>
                   <div className="memory-stats">

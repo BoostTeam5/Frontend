@@ -42,7 +42,7 @@ export const putGroupInfo = async (groupId, updateData) => {
   }
 };
 
-// 그룹 정보 가져오기
+// 그룹 정보 가져오기  V 이것도 완료
 export const readGroupInfo = async (groupId) => {
   try {
     const response = await api.get(`/api/groups/${groupId}`);
@@ -53,7 +53,7 @@ export const readGroupInfo = async (groupId) => {
   }
 };
 
-// 그룹 삭제하기
+// 그룹 삭제하기     V 어찌저찌 연결 완료 GPT 덕분
 export const deleteGroup = async (groupId, password) => {
   try {
     const response = await api.delete(`/api/groups/${groupId}`, {
