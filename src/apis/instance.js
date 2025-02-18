@@ -1,10 +1,8 @@
 import axios from "axios";
 
-// Axios 공통 인스턴스 생성
 const api = axios.create({
-  baseURL: "https://your-api-url.com", // API 기본 URL
-  timeout: 5000, // 요청 제한 시간 (5초)
-  withCredentials: true,
+  baseURL: "http://localhost:5000", // ✅ 실제 백엔드 서버 주소 입력
+  //withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },

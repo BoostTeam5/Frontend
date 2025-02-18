@@ -17,10 +17,11 @@ import likeCountImg from "../assets/flower-like.png";
 import "./groupEditModal.css";
 import "./memory.css";
 import MemoryApi from "../apis/memoryAPI";
-("../apis/memoryAPI");
+import MakeNewMemory from "./makeNewMemory";
 
 function Memory() {
   const { groupId } = useParams(); // URL에서 가져오는 함수
+  const [group, setGroup] = useState(null); // 그룹 정보 상태
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -63,7 +64,7 @@ function Memory() {
   // 추억 만들기 버튼 클릭시 추억 생성 페이지로 이동
   const navigate = useNavigate();
   const GoToMemory = () => {
-    navigate("/newMemory");
+    navigate(`/newMemory/${groupId}`);
   };
 
   // 공개 비공개 버튼 클릭 핸들러
@@ -229,7 +230,7 @@ function Memory() {
           <h2 className="memory-title">추억 목록</h2>
           <button
             className="add-memory-btn"
-            onClick={() => navigate("/newMemory")}
+            onClick={() => navigate(`/newMemory/${groupId}`)}
           >
             추억 만들기
           </button>
@@ -314,6 +315,19 @@ function Memory() {
           <img src={noMemory} />
         )}
       </div> */}
+
+      {isEditModalOpen && (
+        <GroupEditModal
+          onClose={() => setIsEditModalOpen(false)}
+          onSubmit={handleUpdateGroup}
+          currentData={{ groupName, groupImg, groupIntro, isGroupOpen }}
+        />
+      )}
+      {isDeleteModalOpen && (
+        <GroupDeleteModal onClose={() => setIsDeleteModalOpen(false)} />
+      )}
+
+      {/*추억 개수에 따른 것*/}
     </div>
   );
 }
