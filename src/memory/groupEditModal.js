@@ -15,7 +15,14 @@ const GroupEditModal = ({ onClose, onSubmit, currentData }) => {
   };
 
   const handleSubmit = () => {
-    onSubmit({ groupName, groupImg: groupImage, groupIntro, isPublic });
+    const updatedGroupData = {
+      name: groupName, // 그룹 이름
+      imageUrl: groupImage, // 대표 이미지 URL
+      introduction: groupIntro, // 그룹 소개
+      isPublic: isPublic, // 공개 여부
+    };
+
+    onSubmit(updatedGroupData); // 부모 컴포넌트로 데이터 전달
   };
 
   return (

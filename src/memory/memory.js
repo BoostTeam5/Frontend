@@ -17,11 +17,10 @@ import likeCountImg from "../assets/flower-like.png";
 import "./groupEditModal.css";
 import "./memory.css";
 import MemoryApi from "../apis/memoryAPI";
-import MakeNewMemory from "./makeNewMemory";
 
 function Memory() {
   const { groupId } = useParams(); // URL에서 가져오는 함수
-  const [group, setGroup] = useState(null); // 그룹 정보 상태
+  const [group, setGroup] = useState([]); // 그룹 정보 상태
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -39,7 +38,7 @@ function Memory() {
   const [isGroupOpen, setIsGroupOpen] = useState(true);
   const [likeCount, setLikeCount] = useState(0);
   const [badges, setBadges] = useState([]);
-  const [postCount, setPostCount] = useState(0);
+  const [postCount, setPostCount] = useState(1);
   // 공개 비공개 필터링
   const [isPublic, setIsPublic] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false); // 이거 필요없을듯 public으로 수정하기
@@ -84,11 +83,70 @@ function Memory() {
   // 태그 혹은 제목으로 검색하기
   const handleSearch = () => {};
 
-  /* useEffect로 데이터 불러오기기 */
+  /* useEffect로 그룹의 정보 가져오기*/
+  useEffect(() => {
+    const fetchGroup = async () => {
+      try {
+        const data = await MemoryApi.readGroupInfo(groupId);
+        setGroup(data);
+        console.log(data);
+        console.log(`이름은 ${data.name}`);
+      } catch (error) {
+        console.log("error occured while reading error", error);
+      }
+    };
+    if (groupId) {
+      fetchGroup();
+    }
+  }, [groupId]);
+  console.log(`post count is ${group.postCount}`);
+
+  // 그룹 정보 수정하기
+  // useEffect(() => {
+  //   const putGroupInfo = async (updatedData) => {
+  //     try {
+  //       const updatedData = {
+  //         name,
+  //         password,
+  //         imageUrl,
+  //         isPublic,
+  //         introduction,
+  //       };
+  //       const data = await MemoryApi.putGroupInfo(groupId, updatedData);
+  //       setGroup(data);
+  //     } catch (error) {
+  //       console.log("error updating group", error);
+  //     }
+  //   };
+
+  //   if (groupId) {
+  //     putGroupInfo();
+  //   }
+  // });
+
+  const handleUpdateGroup = async (updatedData) => {
+    try {
+      console.log("수정된 그룹 데이터:", updatedData);
+
+      // API 호출하여 그룹 정보 업데이트
+      const updatedGroup = await MemoryApi.putGroupInfo(groupId, updatedData);
+
+      // 변경된 데이터 반영
+      setGroup(updatedGroup);
+      setIsEditModalOpen(false); // 모달 닫기
+
+      // 최신 그룹 정보 다시 불러오기 (데이터 동기화)
+      fetchGroup();
+    } catch (error) {
+      console.error("그룹 정보 수정 중 오류 발생:", error);
+    }
+  };
+
+  /* useEffect로 그룹의 게시글 가져오기 */
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const data = await MemoryApi.readPost(
+        const data = await MemoryApi.readPosts(
           groupId,
           page,
           pageSize,
@@ -96,7 +154,9 @@ function Memory() {
           keyword,
           isPublic
         );
+
         setPosts(data);
+        console.log(data);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
       }
@@ -131,13 +191,13 @@ function Memory() {
     );
   };
 
-  const handleUpdateGroup = (updatedData) => {
-    setGroupName(updatedData.groupName);
-    setGroupImg(updatedData.groupImg || defaultImg);
-    setGroupIntro(updatedData.groupIntro);
-    setIsGroupOpen(updatedData.isPublic);
-    setIsEditModalOpen(false); // 모달 닫기
-  };
+  // const handleUpdateGroup = (updatedData) => {
+  //   setGroupName(updatedData.groupName);
+  //   setGroupImg(updatedData.groupImg || defaultImg);
+  //   setGroupIntro(updatedData.groupIntro);
+  //   setIsGroupOpen(updatedData.isPublic);
+  //   setIsEditModalOpen(false); // 모달 닫기
+  // };
 
   const handleDeleteGroup = () => {
     {
@@ -145,37 +205,34 @@ function Memory() {
     }
   };
 
-  useEffect(() => {
-    console.log("Updated groupName:", groupName);
-  }, [groupName]);
-
   return (
     <div className="groupDetail-container">
       {/* 상단 그룹 정보 */}
       <div className="clickedGroupInfo">
         {/* 왼쪽: 그룹 이미지 */}
         <div className="groupImageDesign">
-          <img src={groupImg || defaultImg} alt="그룹 이미지" />
+          <img
+            src={group.imageUrl ? group.imageUrl : defaultImg}
+            alt="그룹 이미지"
+          />
         </div>
 
         {/* 중앙: 그룹 정보 */}
         <div className="groupInfo-text">
           <div className="info1">
-            <span>{"D+265"}</span>
-            <span>{isGroupOpen ? "공개" : "비공개"}</span>
+            <span>{"D+265      "}</span>
+            <span>{group.isPublic ? "공개" : "비공개"}</span>
           </div>
 
           <div className="info2">
-            <span>{groupName || "달봉이네 가족"}</span>
-            <span>{postCount ? `추억 ${postCount}` : `추억 8`}</span>
+            <span>{group.name || "달봉이네 가족"}</span>
+            <span>{`추억 ${group.postCount}` || `추억 8`}</span>
             <span>|</span>
-            <span>
-              {likeCount ? `그룹 공감 ${likeCount}` : `그룹 공감 1.5K`}
-            </span>
+            <span>{`그룹 공감 ${group.likeCount}` || `그룹 공감 1.5K`}</span>
           </div>
 
           <div className="groupIntro">
-            {groupIntro ||
+            {group.introduction ||
               "서로 한 마음으로 응원하고 아끼는 달봉이네 가족입니다."}
           </div>
 
