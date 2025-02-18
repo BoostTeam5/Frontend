@@ -124,23 +124,23 @@ function Memory() {
   //   }
   // });
 
-  const handleUpdateGroup = async (updatedData) => {
-    try {
-      console.log("수정된 그룹 데이터:", updatedData);
+  // const handleUpdateGroup = async (updatedData) => {
+  //   try {
+  //     console.log("수정된 그룹 데이터:", updatedData);
 
-      // API 호출하여 그룹 정보 업데이트
-      const updatedGroup = await MemoryApi.putGroupInfo(groupId, updatedData);
+  //     // API 호출하여 그룹 정보 업데이트
+  //     const updatedGroup = await MemoryApi.putGroupInfo(groupId, updatedData);
 
-      // 변경된 데이터 반영
-      setGroup(updatedGroup);
-      setIsEditModalOpen(false); // 모달 닫기
+  //     // 변경된 데이터 반영
+  //     setGroup(updatedGroup);
+  //     setIsEditModalOpen(false); // 모달 닫기
 
-      // 최신 그룹 정보 다시 불러오기 (데이터 동기화)
-      fetchGroup();
-    } catch (error) {
-      console.error("그룹 정보 수정 중 오류 발생:", error);
-    }
-  };
+  //     // 최신 그룹 정보 다시 불러오기 (데이터 동기화)
+  //     fetchGroup();
+  //   } catch (error) {
+  //     console.error("그룹 정보 수정 중 오류 발생:", error);
+  //   }
+  // };
 
   /* useEffect로 그룹의 게시글 가져오기 */
   useEffect(() => {
@@ -191,13 +191,13 @@ function Memory() {
     );
   };
 
-  // const handleUpdateGroup = (updatedData) => {
-  //   setGroupName(updatedData.groupName);
-  //   setGroupImg(updatedData.groupImg || defaultImg);
-  //   setGroupIntro(updatedData.groupIntro);
-  //   setIsGroupOpen(updatedData.isPublic);
-  //   setIsEditModalOpen(false); // 모달 닫기
-  // };
+  const handleUpdateGroup = (updatedData) => {
+    setGroupName(updatedData.groupName);
+    setGroupImg(updatedData.groupImg || defaultImg);
+    setGroupIntro(updatedData.groupIntro);
+    setIsGroupOpen(updatedData.isPublic);
+    setIsEditModalOpen(false); // 모달 닫기
+  };
 
   const handleDeleteGroup = () => {
     {
