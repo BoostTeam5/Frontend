@@ -5,34 +5,17 @@ import line from "../assets/listLine.png";
 import replyLine from "../assets/line.png";
 import CommentModal from "./CommentModal";
 import DeleteModal from "./DeleteModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Button from "./Button";
+import {
+  createComment,
+  updateComment,
+  deleteComment,
+  getComments,
+} from "../commentApi";
 
-// 임시 데이터
-const COMMENTS = [
-  {
-    id: 1,
-    nickname: "다람이네 가족",
-    content: "우와 60cm라니..!",
-    password: "password",
-    createdAt: "25.02.15",
-  },
-  {
-    id: 2,
-    nickname: "핑구",
-    content: "저도 가족들과 가봐야겠어요~",
-    password: "password",
-    createdAt: "25.02.15",
-  },
-  {
-    id: 3,
-    nickname: "달팽스",
-    content: "댓글달고감",
-    password: "password",
-    createdAt: "25.02.15",
-  },
-];
-
-function CommentItem({ comment, onEdit, onDelete, onSubmit }) {
+function CommentItem({ comment, onEdit, onDelete }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
@@ -44,11 +27,6 @@ function CommentItem({ comment, onEdit, onDelete, onSubmit }) {
   const handleEdit = () => {
     setIsEditOpen(true);
     onEdit(comment.id);
-  };
-
-  const deleteTest = (password) => {
-    if (comment.password === password) console.log("비밀번호 일치");
-    else console.log("불일치. 다시 입력하세요");
   };
 
   return (
@@ -91,14 +69,14 @@ function CommentItem({ comment, onEdit, onDelete, onSubmit }) {
       {isEditOpen && (
         <CommentModal
           onClose={() => setIsEditOpen(false)}
-          onSubmit={onSubmit}
+          onSubmit={onEdit}
           currentData={comment}
         />
       )}
       {isDeleteOpen && (
         <DeleteModal
           onClose={() => setIsDeleteOpen(false)}
-          onDelete={deleteTest}
+          onDelete={onDelete}
           title="댓글"
         />
       )}
@@ -106,41 +84,133 @@ function CommentItem({ comment, onEdit, onDelete, onSubmit }) {
   );
 }
 
-function CommentList({ comments = COMMENTS, onUpdate, onDelete }) {
+function CommentList({ postId, commentCount }) {
+  const [comments, setComments] = useState([]);
+  const [commentsCount, setCommentsCount] = useState(commentCount);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [newComment, setNewComment] = useState({
+    nickname: "",
+    content: "",
+    password: "",
+  });
 
-  const handleEdit = () => {};
+  const fetchComments = async () => {
+    try {
+      const response = await getComments(postId, 1, 10);
+      setComments(response.data);
+    } catch (e) {
+      console.error("댓글 조회 실패", e);
+    }
+  };
+
+  // 댓글 등록 요청
+  const handleCreateComment = async (e) => {
+    e.preventDefault();
+    try {
+      const { nickname, content, password } = newComment;
+      const response = await createComment(postId, nickname, content, password);
+      setComments((prev) => [...prev, response]);
+      setCommentsCount((prev) => prev + 1);
+      setIsCreateOpen(false);
+    } catch (e) {
+      console.error("댓글 등록 실패", e);
+    }
+  };
+
+  // 댓글 수정 요청
+  const handleUpdateComment = async (id, updatedData) => {
+    try {
+      await updateComment(
+        id,
+        updatedData.nickname,
+        updatedData.content,
+        updatedData.password
+      );
+      setComments((prev) =>
+        prev.map((comment) =>
+          comment.id === id ? { ...comment, ...updatedData } : comment
+        )
+      );
+    } catch (e) {
+      console.error("댓글 수정 실패", e);
+    }
+  };
+
+  // 댓글 삭제 요청
+  const handleDeleteComment = async (id, password) => {
+    try {
+      await deleteComment(id, password);
+      setComments((prev) => prev.filter((comment) => comment.id !== id));
+      setCommentsCount((prev) => prev - 1);
+    } catch (e) {
+      console.error("댓글 삭제 실패", e);
+    }
+  };
+
+  // 댓글 등록 모드로 열기
+  const handleCreateClick = () => {
+    setIsCreateOpen(true);
+  };
+
+  // 댓글 수정 모드로 열기
+  const handleEditComment = (id) => {
+    setEditingId(id);
+  };
+
+  useEffect(() => {
+    fetchComments();
+  }, [postId]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <span>댓글 8</span>
-      <img src={line} alt="구분선" />
-      <ul style={{ padding: "0px" }}>
-        {comments.map((comment) => {
-          if (comment.id === editingId) {
-            const { id, nickname, content, password, createdAt } = comment;
-            const currentData = { nickname, content, password, createdAt };
-
-            // 댓글 수정 api 연동하기
-            const handleSubmit = (formData) => onUpdate(id, formData);
-
-            return (
-              <li style={{ listStyle: "none" }} key={comment.id}>
-                <CommentItem comment={currentData} onSubmit={handleSubmit} />
-              </li>
-            );
-          }
-          return (
+    <div
+      style={{ position: "relative", display: "flex", flexDirection: "column" }}
+    >
+      <Button
+        onClick={handleCreateClick}
+        style={{
+          position: "absolute",
+          top: "0",
+          left: "50%",
+          transform: "translateX(-50%)",
+        }}
+      >
+        댓글 등록하기
+      </Button>
+      <div
+        style={{
+          marginTop: "100px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "10px",
+        }}
+      >
+        <span>댓글 {commentsCount}</span>
+        <img src={line} alt="구분선" />
+        <ul style={{ padding: "0px" }}>
+          {comments.map((comment) => (
             <li style={{ listStyle: "none" }} key={comment.id}>
               <CommentItem
                 comment={comment}
-                onDelete={onDelete}
-                onEdit={setEditingId}
+                onEdit={
+                  comment.id === editingId
+                    ? handleUpdateComment
+                    : handleEditComment
+                }
+                onDelete={handleDeleteComment}
               />
             </li>
-          );
-        })}
-      </ul>
+          ))}
+        </ul>
+      </div>
+      {isCreateOpen && (
+        <CommentModal
+          onClose={() => setIsCreateOpen(false)}
+          onSubmit={handleCreateComment}
+          comment={newComment}
+          setComment={setNewComment}
+        />
+      )}
     </div>
   );
 }

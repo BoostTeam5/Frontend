@@ -46,6 +46,7 @@ export const Input = styled.input`
   width: 370px;
   height: 20px;
   padding: 10px 15px;
+  text-align: left;
   font-size: 12px;
   border: 2px solid #dddddd;
   border-radius: 5px;

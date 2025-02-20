@@ -11,21 +11,25 @@ const INITIAL_VALUES = {
 
 // 댓글 등록 & 수정 모달창 (하나로 재사용)
 
-function CommentModal({ onClose, onSubmit, currentData = INITIAL_VALUES }) {
+function CommentModal({ onClose, onSubmit, comment, setComment }) {
   //const [values, setValues] = useState(currentData);
 
-  const [nickname, setNickname] = useState(currentData.nickname);
-  const [content, setContent] = useState(currentData.content);
-  const [password, setPassword] = useState(currentData.password);
+  const [nickname, setNickname] = useState(comment.nickname || "");
+  const [content, setContent] = useState(comment.content || "");
+  const [password, setPassword] = useState(comment.password || "");
 
   // 등록인지 수정인지 확인
-  const isEditMode = currentData !== INITIAL_VALUES;
+  const isEditMode = comment.id !== undefined;
 
   const handleSubmit = (e) => {
     e.preventDefault(); // form 제출 시, 페이지 새로 고침 동작 방지
 
     onSubmit({ nickname, content, password });
     onClose();
+  };
+
+  const handleChange = (field, value) => {
+    setComment((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -40,7 +44,7 @@ function CommentModal({ onClose, onSubmit, currentData = INITIAL_VALUES }) {
         value={nickname}
         label="닉네임"
         name="nickname"
-        onChange={(e) => setNickname(e.target.value)}
+        onChange={(e) => handleChange("nickname", e.target.value)}
         placeholder="닉네임을 입력해 주세요"
       />
       <div
@@ -56,7 +60,7 @@ function CommentModal({ onClose, onSubmit, currentData = INITIAL_VALUES }) {
           name="content"
           type="text"
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e) => handleChange("content", e.target.value)}
           placeholder="댓글을 입력해 주세요"
         />
       </div>
@@ -64,7 +68,7 @@ function CommentModal({ onClose, onSubmit, currentData = INITIAL_VALUES }) {
         name="password"
         type="password"
         label="비밀번호"
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => handleChange("password", e.target.value)}
         placeholder="비밀번호를 입력해 주세요"
       />
     </Modal>
