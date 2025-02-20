@@ -20,6 +20,7 @@ function MakeNewMemory() {
   const [location, setLocation] = useState("");
   const [moment, setMoment] = useState("");
   const [isPublic, setIsPublic] = useState(true);
+  const [isUploading, setIsUploading] = useState(false); // 업로드 상태 추가
 
   // ✅ 태그 추가 함수
   const handleKeyDown = (event) => {
@@ -35,6 +36,23 @@ function MakeNewMemory() {
   // ✅ 태그 삭제 함수
   const removeTag = (index) => {
     setTags(tags.filter((_, i) => i !== index));
+  };
+
+  // ✅ 이미지 업로드 처리 함수
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true); // 업로드 시작
+    try {
+      const response = await MemoryApi.uploadImage(file);
+      setImageUrl(response.imageUrl);
+      console.log("업로드된 이미지 URL:", response.imageUrl);
+    } catch (error) {
+      console.error("이미지 업로드 실패:", error);
+    } finally {
+      setIsUploading(false); // 업로드 완료
+    }
   };
 
   // ✅ 게시글 업로드 함수
@@ -88,13 +106,16 @@ function MakeNewMemory() {
           onChange={(e) => setTitle(e.target.value)}
         />
 
-        <label>이미지 URL</label>
-        <input
-          type="text"
-          placeholder="이미지 URL을 입력해주세요"
-          value={imageUrl}
-          onChange={(e) => setImageUrl(e.target.value)}
-        />
+        <label>이미지</label>
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
+        {isUploading && <p>이미지 업로드 중...</p>}
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt="업로드 미리보기"
+            style={{ width: "200px" }}
+          />
+        )}
 
         <label>본문</label>
         <textarea

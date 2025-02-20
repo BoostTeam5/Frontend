@@ -66,12 +66,32 @@ export const deleteGroup = async (groupId, password) => {
   }
 };
 
+// formData라는 것도 있음!
+export const uploadImage = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("image", file); // API 문서에 맞춰 key 이름을 "image"로 설정
+
+    const response = await api.post(`/api/image`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // 파일 업로드를 위한 Content-Type
+      },
+    });
+
+    return response.data; // { "imageUrl": "string" }
+  } catch (error) {
+    console.log("failed to upload image", error);
+    throw error;
+  }
+};
+
 const MemoryApi = {
   createPost,
   readPosts,
   putGroupInfo,
   readGroupInfo,
   deleteGroup,
+  uploadImage,
 };
 
 export default MemoryApi;

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./groupEditModal.css";
+import MemoryApi from "../apis/memoryAPI";
 
 const GroupEditModal = ({ onClose, onSubmit, currentData }) => {
   const [groupName, setGroupName] = useState(currentData.groupName);
@@ -7,10 +8,22 @@ const GroupEditModal = ({ onClose, onSubmit, currentData }) => {
   const [groupIntro, setGroupIntro] = useState(currentData.groupIntro);
   const [isPublic, setIsPublic] = useState(currentData.isPublic);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setGroupImage(URL.createObjectURL(file)); // 파일 선택 시 미리보기
+  const [imageUrl, setImageUrl] = useState(""); // 이미지 업로드 후 URL 저장
+  const [isUploading, setIsUploading] = useState(false); // 업로드 상태 추가
+
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true); // 업로드 시작
+    try {
+      const response = await MemoryApi.uploadImage(file);
+      setImageUrl(response.imageUrl);
+      console.log("업로드된 이미지 URL:", response.imageUrl);
+    } catch (error) {
+      console.error("이미지 업로드 실패:", error);
+    } finally {
+      setIsUploading(false); // 업로드 완료
     }
   };
 
@@ -43,10 +56,15 @@ const GroupEditModal = ({ onClose, onSubmit, currentData }) => {
 
         <label>대표 이미지</label>
         <div className="image-upload">
-          <input type="file" id="file-upload" onChange={handleImageUpload} />
-          <label htmlFor="file-upload" className="file-btn">
-            파일 선택
-          </label>
+          <input type="file" accept="image/*" onChange={handleImageUpload} />
+          {isUploading && <p>이미지 업로드 중...</p>}
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt="업로드 미리보기"
+              style={{ width: "200px" }}
+            />
+          )}
         </div>
 
         <label>그룹 소개</label>

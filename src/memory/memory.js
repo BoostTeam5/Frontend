@@ -55,6 +55,10 @@ function Memory() {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
+
+  const [imageUrl, setImageUrl] = useState(""); // 이미지 업로드 후 URL 저장
+  const [isUploading, setIsUploading] = useState(false); // 업로드 상태 추가
+
   // 추억 만들기 버튼
   const handleMakeMemory = () => {
     setIsMakeMemoryOpen(true);
@@ -80,6 +84,9 @@ function Memory() {
     setIsPrivate(false);
   };
 
+  const handleFilterChange = (value) => {
+    setIsPublic(value); // ✅ isPublic 값 변경하여 API 다시 호출
+  };
   // 태그 혹은 제목으로 검색하기
   const handleKeywordChange = (event) => {
     setKeyword(event.target.value);
@@ -102,10 +109,6 @@ function Memory() {
     }
   }, [groupId]);
   console.log(`post count is ${group.postCount}`);
-
-  useEffect(() => {
-    console.log(`현재 posts 개수: ${posts.length}`);
-  }, [posts]); // posts 변경 시 실행
 
   // 그룹 정보 수정하기
   // useEffect(() => {
@@ -161,7 +164,12 @@ function Memory() {
           isPublic
         );
 
-        setPosts(response.data);
+        const uniquePosts = Array.from(
+          new Set(response.data.map((post) => post.id))
+        ).map((id) => response.data.find((post) => post.id === id));
+
+        setPosts(uniquePosts);
+        //setPosts(response.data);
         console.log(posts.length);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
@@ -311,7 +319,7 @@ function Memory() {
 
         {/* 필터 + 검색 */}
         <div className="memory-filter-container">
-          <div className="filter-buttons">
+          {/* <div className="filter-buttons">
             <img
               src={isPublic ? public_active : public_default}
               onClick={isPublic ? handleToPublicDefault : handleToPublicActive}
@@ -324,6 +332,26 @@ function Memory() {
               }
               alt="비공개"
             />
+          </div> */}
+          <div className="filter-buttons">
+            <button
+              className={`filter-btn ${isPublic === true ? "active" : ""}`}
+              onClick={() => handleFilterChange(true)}
+            >
+              공개만 보기
+            </button>
+            <button
+              className={`filter-btn ${isPublic === false ? "active" : ""}`}
+              onClick={() => handleFilterChange(false)}
+            >
+              비공개만 보기
+            </button>
+            <button
+              className={`filter-btn ${isPublic === null ? "active" : ""}`}
+              onClick={() => handleFilterChange(null)}
+            >
+              전체 보기
+            </button>
           </div>
 
           <div className="search-bar">
@@ -331,7 +359,7 @@ function Memory() {
             <input
               type="text"
               placeholder="태그 혹은 제목을 입력해주세요"
-              onChange={handleKeywordChange}
+              onChange={handleKeywordChange} // 키보드에서 입력한 값을 쳤을때 이벤트 처리
             />
           </div>
 
@@ -361,11 +389,18 @@ function Memory() {
                     {post.nickname} | {post.isPublic ? "공개" : "비공개"}
                   </div>
                   <div className="memory-title">{post.title}</div>
+                  <div className="memory-image-container">
+                    <img
+                      src={post.imageUrl || defaultImg} // 기본 이미지 설정
+                      alt="Memory"
+                      className="memory-img-home"
+                    />
+                  </div>{" "}
                   <div className="memory-stats">
                     <img src={likeCountImg} alt="likes" />{" "}
-                    <span>{post.likes}</span>
-                    <img src={comment} alt="comments" />{" "}
-                    <span>{post.comments}</span>
+                    <span>{post.likeCount}</span>
+                    <img src={comment} alt="No Image" />{" "}
+                    <span>{post.commentCount}</span>
                   </div>
                 </div>
               </div>
