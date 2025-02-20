@@ -104,34 +104,11 @@ function Memory() {
         console.log("error occured while reading error", error);
       }
     };
-    if (groupId) {
+    if (groupId && !isEditModalOpen) {
+      // ✅ 모달이 열려있을 때는 다시 실행되지 않도록!
       fetchGroup();
     }
-  }, [groupId]);
-  console.log(`post count is ${group.postCount}`);
-
-  // 그룹 정보 수정하기
-  // useEffect(() => {
-  //   const putGroupInfo = async (updatedData) => {
-  //     try {
-  //       const updatedData = {
-  //         name,
-  //         password,
-  //         imageUrl,
-  //         isPublic,
-  //         introduction,
-  //       };
-  //       const data = await MemoryApi.putGroupInfo(groupId, updatedData);
-  //       setGroup(data);
-  //     } catch (error) {
-  //       console.log("error updating group", error);
-  //     }
-  //   };
-
-  //   if (groupId) {
-  //     putGroupInfo();
-  //   }
-  // });
+  }, [groupId, isEditModalOpen]);
 
   // const handleUpdateGroup = async (updatedData) => {
   //   try {
@@ -143,13 +120,18 @@ function Memory() {
   //     // 변경된 데이터 반영
   //     setGroup(updatedGroup);
   //     setIsEditModalOpen(false); // 모달 닫기
-
-  //     // 최신 그룹 정보 다시 불러오기 (데이터 동기화)
-  //     fetchGroup();
   //   } catch (error) {
   //     console.error("그룹 정보 수정 중 오류 발생:", error);
+  //     alert("그룹 정보 수정 실패");
   //   }
   // };
+
+  // 두번 렌더링되지 않게 부모에서는 group 정보 바꾸고 모달 닫기까지만으로 수정
+  const handleUpdateGroup = async (updatedGroup) => {
+    console.log("Parent received updated group:", updatedGroup);
+    setGroup(updatedGroup);
+    setIsEditModalOpen(false);
+  };
 
   /* useEffect로 그룹의 게시글 가져오기 */
   useEffect(() => {
@@ -221,14 +203,6 @@ function Memory() {
         />
       </button>
     );
-  };
-
-  const handleUpdateGroup = (updatedData) => {
-    setGroupName(updatedData.groupName);
-    setGroupImg(updatedData.groupImg || defaultImg);
-    setGroupIntro(updatedData.groupIntro);
-    setIsGroupOpen(updatedData.isPublic);
-    setIsEditModalOpen(false); // 모달 닫기
   };
 
   return (
@@ -415,7 +389,12 @@ function Memory() {
         <GroupEditModal
           onClose={() => setIsEditModalOpen(false)}
           onSubmit={handleUpdateGroup}
-          currentData={{ groupName, groupImg, groupIntro, isGroupOpen }}
+          currentData={{
+            groupName, //: group.name,
+            groupImg, //: group.imageUrl,
+            groupIntro, //: group.introduction,
+            isPublic, //: group.isPublic,
+          }}
         />
       )}
       {isDeleteModalOpen && (

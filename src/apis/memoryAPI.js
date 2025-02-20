@@ -32,12 +32,42 @@ export const readPosts = async (
 };
 
 // 그룹 수정 API   뭔가 문제있음
+// export const putGroupInfo = async (groupId, updateData) => {
+//   if (!groupId) {
+//     console.error("❌ 그룹 ID가 없습니다.");
+//     throw new Error("그룹 ID가 없습니다.");
+//   }
+
+//   console.log("📌 그룹 수정 요청 데이터:", updateData);
+//   console.log("📌 그룹 수정 요청 URL:", `/api/groups/${groupId}`);
+
+//   try {
+//     const response = await api.put(`/api/groups/${groupId}`, updateData);
+//     console.log("📌 그룹 수정 성공:", response.data);
+//     return response.data;
+//   } catch (error) {
+//     console.error("📌 그룹 수정 실패:", error.response?.data || error);
+//     throw error;
+//   }
+// };
+// 그룹 수정 API (API 명세서에 맞게 수정)
 export const putGroupInfo = async (groupId, updateData) => {
   try {
-    const response = await api.put(`/api/groups/${groupId}`, updateData);
+    // ✅ API 명세서에 맞는 데이터만 포함하도록 수정
+    const requestData = {
+      name: updateData.name, // 그룹명
+      password: updateData.password, // 수정 권한 비밀번호 (필수)
+      imageUrl: updateData.imageUrl, // 대표 이미지 URL
+      isPublic: updateData.isPublic, // 공개 여부
+      introduction: updateData.introduction, // 그룹 소개
+    };
+
+    console.log("📌 API 요청 데이터:", requestData);
+
+    const response = await api.put(`/api/groups/${groupId}`, requestData);
     return response.data;
   } catch (error) {
-    console.error("Post update error:", error);
+    console.error("❌ 그룹 수정 요청 실패:", error.response?.data || error);
     throw error;
   }
 };
