@@ -1,0 +1,253 @@
+.groupDetail-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.clickedGroupInfo {
+  display: flex;
+  justify-content: space-between; /* 이미지, 텍스트, 버튼을 양쪽으로 정렬 */
+  align-items: flex-start;
+  width: 80%;
+  padding: 20px;
+}
+
+.groupImageDesign img {
+  width: 300px;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.groupInfo-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  flex: 1;
+}
+
+.info1 {
+  font-size: 14px;
+  color: gray;
+  margin-bottom: 5px;
+}
+
+.info2 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.groupIntro {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+/* 획득 배지 */
+.badge-container {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.badge {
+  background: #f5f5f5;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 오른쪽 버튼 컨테이너 */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.text-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+}
+
+.text-button:hover {
+  text-decoration: underline;
+}
+
+.like-button img {
+  width: 200px;
+  height: 50px;
+}
+
+/* 구분선 */
+.divider img {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.filter-tab {
+  display: flex;
+  flex-direction: row;
+}
+
+.enterWord {
+  background-color: #f4f4f4;
+}
+
+.memory-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+}
+
+.memory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  max-width: 1000px;
+  margin-bottom: 10px;
+}
+
+.memory-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.memory-filter-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  max-width: 1000px;
+  margin-bottom: 20px;
+}
+
+.filter-buttons img {
+  width: 75px;
+  height: 50px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #f4f4f4;
+  padding: 5px 10px;
+  border-radius: 20px;
+  width: 600px;
+}
+
+.search-bar img {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.search-bar input {
+  border: none;
+  background: none;
+  width: 100%;
+}
+
+.add-memory-btn {
+  width: 200px;
+  background: black;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-size: 16px;
+}
+
+.memory-list {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(375px, 1fr)
+  ); /* 카드 가로 크기 375px */
+  gap: 20px; /* 카드 간격 */
+  justify-content: center;
+  align-items: start;
+  width: 90%;
+  max-width: 1200px;
+  margin: 20px auto;
+}
+
+.load-more-btn {
+  border: 1px solid #282828;
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  background: #fafafa;
+  color: black;
+  border-radius: 10px black;
+  cursor: pointer;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-btn {
+  background: #fafafa;
+  color: #282828;
+  border: 1px solid #282828;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: 160px;
+  height: 45px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #282828;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  list-style: none;
+  width: 160px;
+  border-radius: 6px;
+}
+
+.dropdown-menu li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+  background: #f0f0f0;
+}
+
+.memory-item {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  height: 142px; /* 카드 높이 */
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
