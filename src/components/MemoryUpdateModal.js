@@ -3,7 +3,12 @@ import InputField, { Input } from "./InputField";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import TagInput from "./TagInput";
-import { updateMemory } from "../memoryApi";
+import { updateMemory, verifyMemoryPassword } from "../memoryApi";
+import dayjs from "dayjs";
+
+const formatDate = (date) => {
+  return dayjs(date).format("YYYY-MM-DD");
+};
 
 function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
   const [memoryValues, setMemoryValues] = useState(memory);
@@ -64,7 +69,11 @@ function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
       alert("비밀번호를 입력해주세요");
       return;
     }
+
     try {
+      // 비밀번호가 계속 일치하지 않다고 함... 이유를 모르겠음
+      //const checkPassword = await verifyMemoryPassword(postId, password);
+
       const updatedData = {
         postId: postId,
         ...memoryValues,
@@ -76,7 +85,6 @@ function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
       const response = onUpdate(updatedData);
       setMemoryValues(response);
       setTags([...memoryValues.tags]);
-      alert("추억 수정 완료");
       onClose();
     } catch (e) {
       console.error(e.response?.data?.message || "추억 수정 실패");
@@ -177,7 +185,7 @@ function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
           <InputField
             name="moment"
             type="date"
-            value={memoryValues.moment}
+            value={formatDate(memoryValues.moment)}
             label="추억의 순간"
             onChange={handleInputChange}
             placeholder="추억의 순간을 입력해 주세요 (ex. YYYY-MM-DD)"

@@ -3,10 +3,10 @@ import styled from "styled-components";
 import InputField from "./InputField";
 import { useState } from "react";
 
-// 댓글 수정 모달창
-function CommentModal({ comment, onClose, onSubmit }) {
-  const [nickname, setNickname] = useState(comment.nickname);
-  const [content, setContent] = useState(comment.content);
+// 댓글 등록 모달창
+function CreateCommentModal({ onClose, onSubmit }) {
+  const [nickname, setNickname] = useState("");
+  const [content, setContent] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async (e) => {
@@ -20,8 +20,8 @@ function CommentModal({ comment, onClose, onSubmit }) {
     <Modal
       onClose={onClose}
       onSubmit={handleSubmit}
-      modalTitle={"댓글 수정"}
-      buttonTitle={"수정하기"}
+      modalTitle={"댓글 등록"}
+      buttonTitle={"등록하기"}
     >
       <InputField
         type="text"
@@ -59,7 +59,7 @@ function CommentModal({ comment, onClose, onSubmit }) {
   );
 }
 
-export default CommentModal;
+export default CreateCommentModal;
 
 const Label = styled.label`
   font-size: 14px;
@@ -74,8 +74,7 @@ const ContentArea = styled.textarea`
   border: 2px solid #dddddd;
   border-radius: 5px;
   resize: none;
-  white-space: pre-wrap; /*줄바꿈 처리*/
-  overflow-y: auto; /*스크롤 표시*/
+  overflow-y: auto;
 
   &:focus {
     border-color: #282828;

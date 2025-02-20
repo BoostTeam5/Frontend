@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
 import CommentList from "../components/CommentList";
 import MemoryInfo from "../components/MemoryInfo";
 import { getMemory, updateMemory, deleteMemory } from "../memoryApi";
-import { getComments } from "../commentApi";
 
 // 피그마에 있는 폰트 적용
 import { createGlobalStyle } from "styled-components";
@@ -22,12 +20,14 @@ function MemoryDetail() {
   const [commentCount, setCommentCount] = useState(0);
   const navigate = useNavigate();
 
+  // 게시글 상세 조회회
   useEffect(() => {
     const fetchMemoryDetails = async () => {
       try {
         const response = await getMemory(postId);
         setMemoryData(response);
         setCommentCount(response.commentCount);
+        console.log("memoryDetail", response);
       } catch (e) {
         console.error("추억 불러오기 실패", e);
       }
@@ -35,6 +35,11 @@ function MemoryDetail() {
 
     fetchMemoryDetails();
   }, [postId]);
+
+  // 댓글 개수 업데이트
+  const updateCommentCount = (newCount) => {
+    setCommentCount(newCount);
+  }
 
   // 추억 수정 요청
   const handleUpdateMemory = async (updatedMemory) => {
@@ -76,6 +81,7 @@ function MemoryDetail() {
           <MemoryInfo
             postId={postId}
             memory={memoryData}
+            commentCount={commentCount}
             onUpdate={handleUpdateMemory} // 수정 요청
             onDelete={handleDeleteMemory} // 삭제 요청
           />
@@ -83,6 +89,7 @@ function MemoryDetail() {
         <CommentList
           postId={postId}
           commentCount={commentCount}
+          setCommentCount={updateCommentCount}
         />
       </div>
     </div>

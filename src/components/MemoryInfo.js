@@ -8,10 +8,14 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import contentImg from "../assets/contentImg.png";
-import CommentModal from "./CommentModal";
 import { likeMemory } from "../memoryApi";
+import dayjs from "dayjs";
 
-function MemoryInfo({ postId, memory, onUpdate, onDelete }) {
+const formatDate = (date) => {
+  return dayjs(date).format("YYYY-MM-DD");
+};
+
+function MemoryInfo({ postId, memory, commentCount, onUpdate, onDelete }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [memoryData, setMemoryData] = useState(memory);
@@ -107,7 +111,7 @@ function MemoryInfo({ postId, memory, onUpdate, onDelete }) {
             }}
           >
             <span>{memory.location}</span>
-            <span>{memory.moment}</span>
+            <span>{formatDate(memory.moment)}</span>
 
             <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
               <img src={flowerImg} alt="공감수" style={{ width: "25px" }} />{" "}
@@ -115,7 +119,7 @@ function MemoryInfo({ postId, memory, onUpdate, onDelete }) {
             </div>
             <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
               <img src={replyCountImg} alt="댓글수" style={{ width: "25px" }} />
-              <span style={{ color: "#8d8d8d" }}>{memory.commentCount}</span>
+              <span style={{ color: "#8d8d8d" }}>{commentCount}</span>
             </div>
           </div>
           <img
