@@ -110,22 +110,6 @@ function Memory() {
     }
   }, [groupId, isEditModalOpen]);
 
-  // const handleUpdateGroup = async (updatedData) => {
-  //   try {
-  //     console.log("수정된 그룹 데이터:", updatedData);
-
-  //     // API 호출하여 그룹 정보 업데이트
-  //     const updatedGroup = await MemoryApi.putGroupInfo(groupId, updatedData);
-
-  //     // 변경된 데이터 반영
-  //     setGroup(updatedGroup);
-  //     setIsEditModalOpen(false); // 모달 닫기
-  //   } catch (error) {
-  //     console.error("그룹 정보 수정 중 오류 발생:", error);
-  //     alert("그룹 정보 수정 실패");
-  //   }
-  // };
-
   // 두번 렌더링되지 않게 부모에서는 group 정보 바꾸고 모달 닫기까지만으로 수정
   const handleUpdateGroup = async (updatedGroup) => {
     console.log("Parent received updated group:", updatedGroup);
