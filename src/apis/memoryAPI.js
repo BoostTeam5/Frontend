@@ -115,6 +115,23 @@ export const uploadImage = async (file) => {
   }
 };
 
+export const giveGroupLike = async (groupId) => {
+  try {
+    const response = await api.post(`/api/groups/${groupId}/like`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const givePostLike = async (postId) => {
+  try {
+    const response = await api.post(`/api/posts/${postId}/like`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 const MemoryApi = {
   createPost,
   readPosts,
@@ -122,6 +139,8 @@ const MemoryApi = {
   readGroupInfo,
   deleteGroup,
   uploadImage,
+  giveGroupLike,
+  givePostLike,
 };
 
 export default MemoryApi;

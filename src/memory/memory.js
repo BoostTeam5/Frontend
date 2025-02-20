@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Button } from "react";
+import React, { useEffect, useState, Button, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import GroupEditModal from "./groupEditModal";
 import GroupDeleteModal from "./groupDeleteModal";
@@ -29,16 +29,6 @@ function Memory() {
 
   // 공개 비공개 그룹별 api에서 isPublic 속성에 따라서 데이터 분류하고 저장
   const [posts, setPosts] = useState([]);
-
-  // 특정 그룹 정보 렌더링
-  const [groupName, setGroupName] = useState("");
-  const [groupImg, setGroupImg] = useState();
-  // 그룹의 정보 수정시 필요한 각각의 정보
-  const [groupIntro, setGroupIntro] = useState("");
-  const [isGroupOpen, setIsGroupOpen] = useState(true);
-  const [likeCount, setLikeCount] = useState(0);
-  const [badges, setBadges] = useState([]);
-  const [postCount, setPostCount] = useState(1);
   // 공개 비공개 필터링
   const [isPublic, setIsPublic] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false); // 이거 필요없을듯 public으로 수정하기
@@ -55,9 +45,6 @@ function Memory() {
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
-
-  const [imageUrl, setImageUrl] = useState(""); // 이미지 업로드 후 URL 저장
-  const [isUploading, setIsUploading] = useState(false); // 업로드 상태 추가
 
   // 추억 만들기 버튼
   const handleMakeMemory = () => {
@@ -92,23 +79,33 @@ function Memory() {
     setKeyword(event.target.value);
   };
 
-  /* useEffect로 그룹 정보 가져오기*/
+  const updateLike = async () => {
+    try {
+      await MemoryApi.giveGroupLike(groupId); // 그룹 좋아요 API 호출
+      console.log("✅ 그룹 좋아요 업데이트 완료");
+
+      // 최신 그룹 정보 다시 불러오기
+      fetchGroup();
+    } catch (error) {
+      console.error("❌ 그룹 좋아요 업데이트 실패:", error);
+    }
+  };
+
+  const fetchGroup = useCallback(async () => {
+    try {
+      const data = await MemoryApi.readGroupInfo(groupId);
+      setGroup(data);
+      console.log("✅ 최신 그룹 정보:", data);
+    } catch (error) {
+      console.error("❌ 그룹 정보 불러오기 실패:", error);
+    }
+  }, [groupId]);
+
   useEffect(() => {
-    const fetchGroup = async () => {
-      try {
-        const data = await MemoryApi.readGroupInfo(groupId);
-        setGroup(data);
-        console.log(data);
-        console.log(`이름은 ${data.name}`);
-      } catch (error) {
-        console.log("error occured while reading error", error);
-      }
-    };
     if (groupId && !isEditModalOpen) {
-      // ✅ 모달이 열려있을 때는 다시 실행되지 않도록!
       fetchGroup();
     }
-  }, [groupId, isEditModalOpen]);
+  }, [groupId, isEditModalOpen, fetchGroup]); // ✅ useEffect에서 fetchGroup 사용
 
   // 두번 렌더링되지 않게 부모에서는 group 정보 바꾸고 모달 닫기까지만으로 수정
   const handleUpdateGroup = async (updatedGroup) => {
@@ -252,7 +249,9 @@ function Memory() {
           <div className="like-button-container">
             <OpacityButton
               src={likeBtn}
-              onClick={() => alert("이미지 버튼 클릭!")}
+              onClick={() => {
+                updateLike();
+              }}
             />
           </div>
         </div>
@@ -341,7 +340,11 @@ function Memory() {
         <div className="memory-list">
           {posts.length > 0 ? (
             posts.map((post, index) => (
-              <div key={index} className="memory-item">
+              <div
+                key={index}
+                className="memory-item"
+                onClick={() => navigate(`/posts/${post.id}`)}
+              >
                 <div className="memory-content">
                   <div className="memory-meta">
                     {post.nickname} | {post.isPublic ? "공개" : "비공개"}
@@ -374,10 +377,10 @@ function Memory() {
           onClose={() => setIsEditModalOpen(false)}
           onSubmit={handleUpdateGroup}
           currentData={{
-            groupName, //: group.name,
-            groupImg, //: group.imageUrl,
-            groupIntro, //: group.introduction,
-            isPublic, //: group.isPublic,
+            groupName: group.name,
+            groupImg: group.imageUrl,
+            groupIntro: group.introduction,
+            isPublic: group.isPublic,
           }}
         />
       )}
@@ -387,6 +390,11 @@ function Memory() {
           onDelete={deleteGroupAPI} // 삭제 요청 함수 전달
         />
       )}
+
+      {isPublic &&
+        {
+          /*공개인것만 보이게*/
+        }}
     </div>
   );
 }
