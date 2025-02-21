@@ -56,6 +56,9 @@ function Memory() {
     navigate(`/newMemory/${groupId}`);
   };
 
+  const loadMoreData = () => {
+    console.log("더보기");
+  };
   // 공개 비공개 버튼 클릭 핸들러
   const handleToPublicActive = () => {
     setIsPublic(true);
@@ -133,36 +136,7 @@ function Memory() {
     setIsEditModalOpen(false);
   };
 
-  /* useEffect로 그룹의 게시글 가져오기 */
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     try {
-  //       const response = await MemoryApi.readPosts(
-  //         groupId,
-  //         page,
-  //         pageSize,
-  //         sortBy,
-  //         keyword,
-  //         isPublic
-  //       );
-
-  //       const uniquePosts = Array.from(
-  //         new Set(response.data.map((post) => post.id))
-  //       ).map((id) => response.data.find((post) => post.id === id));
-
-  //       setPosts(uniquePosts);
-  //       //setPosts(response.data);
-  //       console.log(posts.length);
-  //     } catch (error) {
-  //       console.error("Failed to fetch posts:", error);
-  //     }
-  //   };
-
-  //   if (groupId) {
-  //     fetchPosts();
-  //   }
-  // }, [groupId, page, pageSize, sortBy, keyword, isPublic]); // ✅ 값이 바뀌면 자동으로 실행
-
+  //useEffect로 그룹의 게시글 가져오기 */
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -175,11 +149,12 @@ function Memory() {
           isPublic
         );
 
-        const uniquePosts = Array.from(
-          new Set(response.data.map((post) => post.id))
-        ).map((id) => response.data.find((post) => post.id === id));
+        // const uniquePosts = Array.from(
+        //   new Set(response.data.map((post) => post.id))
+        // ).map((id) => response.data.find((post) => post.id === id));
 
-        setPosts(uniquePosts);
+        //setPosts(uniquePosts);
+        setPosts(response.data);
         console.log(posts.length);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
@@ -189,7 +164,35 @@ function Memory() {
     if (groupId) {
       fetchPosts();
     }
-  }, [groupId, page, pageSize, sortBy, keyword, isPublic]);
+  }, [groupId, page, pageSize, sortBy, keyword, isPublic]); // ✅ 값이 바뀌면 자동으로 실행
+
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
+  //     try {
+  //       const response = await MemoryApi.readPosts(
+  //         groupId,
+  //         page,
+  //         pageSize,
+  //         sortBy,
+  //         keyword,
+  //         isPublic
+  //       );
+  //       console.log("서버 응답 데이터:", response.data);
+  //       const uniquePosts = Array.from(
+  //         new Set(response.data.map((post) => post.id))
+  //       ).map((id) => response.data.find((post) => post.id === id));
+
+  //       setPosts(uniquePosts);
+  //       console.log(posts.length);
+  //     } catch (error) {
+  //       console.error("Failed to fetch posts:", error);
+  //     }
+  //   };
+
+  //   if (groupId) {
+  //     fetchPosts();
+  //   }
+  // }, [groupId, page, pageSize, sortBy, keyword, isPublic]);
 
   // 그룹 삭제 API
   const deleteGroupAPI = async (password) => {
@@ -423,6 +426,8 @@ function Memory() {
             <img src={noMemory} />
           )}
         </div>
+
+        <button onClick={loadMoreData}>더보기</button>
       </div>
 
       {isEditModalOpen && (
