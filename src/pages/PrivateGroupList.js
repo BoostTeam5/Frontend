@@ -10,8 +10,9 @@ import noGroupAlert from "../assets/no_group_alert.png"; // 그룹 없음 이미
 import addGroupIconLong from "../assets/addGroup_long.png";
 import { useNavigate } from "react-router-dom";
 import { fetchGroups } from "../api/groupApi"; // API 함수 임포트
+import api from "../apis/instance";
 
-const PrivateGroupList = () => {
+const PrivateGroupList = ({ group }) => {
   const [groups, setGroups] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("likes");
@@ -22,7 +23,7 @@ const PrivateGroupList = () => {
   useEffect(() => {
     const getGroups = async () => {
       try {
-        const data = await fetchGroups();
+        const data = await api.fetchGroups();
         // API에서 불러온 그룹 중 비공개(isPublic === false) 그룹만 사용
         const privateGroups = data.filter((group) => !group.isPublic);
         setGroups(privateGroups);
@@ -63,11 +64,7 @@ const PrivateGroupList = () => {
           className="public-btn"
           onClick={() => navigate("/")}
         />
-        <img
-          src={privateIcon}
-          alt="비공개 버튼"
-          className="private-btn"
-        />
+        <img src={privateIcon} alt="비공개 버튼" className="private-btn" />
         <div className="search-bar">
           <img src={searchBarBg} alt="검색창 배경" className="search-bg" />
           <img src={searchIcon} alt="검색 아이콘" className="search-icon" />

@@ -5,37 +5,51 @@ import SuccessModal from "../components/SuccessModal";
 import ErrorModal from "../components/ErrorModal";
 import toggleDefault from "../assets/toggle_default.png";
 import toggleActive from "../assets/toggle_active.png";
+import MemoryApi from "../apis/memoryAPI";
 import "../style/CreateGroup.css";
+import groupApi from "../api/groupApi";
 
 const CreateGroup = () => {
-  const [groupName, setGroupName] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [groupImage, setGroupImage] = useState(null);
-  const [groupIntro, setGroupIntro] = useState("");
-  const [groupDescription, setGroupDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState(null);
+  const [introduction, setIntroduction] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
-  
+
   const navigate = useNavigate();
 
   // 이미지 업로드 핸들러 (파일 검증)
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    const allowedTypes = ["image/jpeg", "image/png"];
-    const maxSize = 5 * 1024 * 1024;
+  // const handleImageUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   const allowedTypes = ["image/jpeg", "image/png"];
+  //   const maxSize = 5 * 1024 * 1024;
+  //   if (!file) return;
+  //   if (!allowedTypes.includes(file.type)) {
+  //     setErrorMessage("JPEG 또는 PNG 형식의 파일만 업로드 가능합니다.");
+  //     return;
+  //   }
+  //   if (file.size > maxSize) {
+  //     setErrorMessage("파일 크기는 5MB 이하여야 합니다.");
+  //     return;
+  //   }
+  //   setGroupImage(file);
+  //   setErrorMessage("");
+  // };
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
     if (!file) return;
-    if (!allowedTypes.includes(file.type)) {
-      setErrorMessage("JPEG 또는 PNG 형식의 파일만 업로드 가능합니다.");
-      return;
+
+    // setIsUploading(true);
+    try {
+      const response = await MemoryApi.uploadImage(file);
+      setImageUrl(response.imageUrl);
+      console.log("업로드된 이미지 URL:", response.imageUrl);
+    } catch (error) {
+      console.error("이미지 업로드 실패:", error);
     }
-    if (file.size > maxSize) {
-      setErrorMessage("파일 크기는 5MB 이하여야 합니다.");
-      return;
-    }
-    setGroupImage(file);
-    setErrorMessage("");
   };
 
   // 그룹 생성 요청 (백엔드 API 호출)
@@ -44,18 +58,17 @@ const CreateGroup = () => {
     try {
       // (예시) 이미지 업로드 API가 있다면 여기서 별도 업로드 후 URL 받기
       // 여기서는 간단하게 브라우저에서 미리보기용 URL 생성
-      const imageUrl = groupImage ? URL.createObjectURL(groupImage) : null;
+      //const imageUrl = imageUrl ? URL.createObjectURL(imageUrl) : null;
 
       const groupData = {
-        name: groupName,
+        name,
         password,
         imageUrl,
-        introduction: groupIntro,
-        description: groupDescription,
+        introduction,
         isPublic,
       };
 
-      const result = await buildGroup(groupData);
+      const result = await groupApi.buildGroup(groupData);
       console.log("생성된 그룹:", result);
       setShowSuccessModal(true);
     } catch (error) {
@@ -84,8 +97,8 @@ const CreateGroup = () => {
           type="text"
           className="create-group-input"
           placeholder="그룹명을 입력해 주세요"
-          value={groupName}
-          onChange={(e) => setGroupName(e.target.value)}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
         />
 
@@ -96,16 +109,8 @@ const CreateGroup = () => {
         <textarea
           className="create-group-textarea"
           placeholder="그룹 소개를 입력해 주세요"
-          value={groupIntro}
-          onChange={(e) => setGroupIntro(e.target.value)}
-        />
-
-        <label className="create-group-label">그룹 설명</label>
-        <textarea
-          className="create-group-textarea"
-          placeholder="그룹 설명을 입력해 주세요"
-          value={groupDescription}
-          onChange={(e) => setGroupDescription(e.target.value)}
+          value={introduction}
+          onChange={(e) => setIntroduction(e.target.value)}
         />
 
         <label className="create-group-label">비밀번호</label>
@@ -128,7 +133,9 @@ const CreateGroup = () => {
           />
         </div>
 
-        <button type="submit">그룹 만들기</button>
+        <button type="submit" onClick={handleCreateGroup}>
+          그룹 만들기
+        </button>
       </form>
 
       {showSuccessModal && (

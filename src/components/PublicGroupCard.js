@@ -14,15 +14,20 @@ const PublicGroupCard = ({ group }) => {
     }
     return likes;
   };
+  const countVar = group.badges;
 
   return (
     <div
       className="public-card"
-      onClick={() => navigate(`/groups/public/access/${group.id}`)}
+      onClick={() => navigate(`/groups/${group.id}`)}
     >
       <div className="card-content">
         {/* ✅ 콘텐츠 이미지 */}
-        <img src={contentImg} alt="콘텐츠 이미지" className="content-image" />
+        <img
+          src={group.imageUrl || contentImg}
+          alt="콘텐츠 이미지"
+          className="content-image"
+        />
 
         {/* ✅ 그룹 메타 정보 */}
         <div className="group-meta">
@@ -46,15 +51,15 @@ const PublicGroupCard = ({ group }) => {
 
         {/* ✅ 획득 배지 개수, 추억 수, 그룹 공감 수치 + 아이콘 */}
         <div className="group-stats">
-          <span className="badge-value">{group.badges}</span>
-          <span className="post-value">{group.posts}</span>
+          <span className="badge-value">{group.badgeCount}</span>
+          <span className="post-value">{group.postCount}</span>
           <div className="like-container-public">
             <img
               src={flowerLikeIcon}
               alt="공감 아이콘"
               className="flower-icon"
             />
-            <span className="stat-value">{formatLikes(group.likes)}</span>
+            <span className="stat-value">{formatLikes(group.likeCount)}</span>
           </div>
         </div>
       </div>

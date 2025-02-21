@@ -1,37 +1,31 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import PrivateAccessModal from "../components/PrivateAccessModal";
-import { verifyGroupPassword } from "../api/groupApi";
 import "../style/PrivateGroupAccess.css";
 import privateAccessImg from "../assets/privateAccess.png";
 
 const PrivateGroupAccess = () => {
-  const [password, setPassword] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const groupId = new URLSearchParams(location.search).get("groupId");
+    const [password, setPassword] = useState("");
+    const [showModal, setShowModal] = useState(false);
+    const navigate = useNavigate();
+    const location = useLocation(); // ✅ 현재 위치 정보 가져오기
+    const groupId = new URLSearchParams(location.search).get("groupId"); // ✅ groupId 추출
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const result = await verifyGroupPassword(groupId, password);
-      // result.valid 또는 result.success 등 백엔드 응답에 맞게 처리
-      if (result.valid) {
-        navigate("/");
-      } else {
-        setShowModal(true);
-      }
-    } catch (error) {
-      console.error("비밀번호 검증 오류:", error);
-      setShowModal(true);
-    }
-  };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const correctPassword = "1234"; // ✅ 실제 구현 시 서버 검증 필요
 
-  const handleModalClose = () => {
-    setShowModal(false);
-    navigate(`/privateAccess?groupId=${groupId}`);
-  };
+        if (password === correctPassword) {
+          navigate("/"); // ✅ 비밀번호 일치 시 메인 페이지로 이동
+        } else {
+          setShowModal(true); // ✅ 불일치 시 모달 표시
+        }
+      };
+
+      const handleModalClose = () => {
+        setShowModal(false);
+        navigate(`/privateAccess?groupId=${groupId}`); // ✅ 다시 비밀번호 입력 페이지로
+      };
 
   return (
     <div className="private-access-container">
@@ -50,9 +44,11 @@ const PrivateGroupAccess = () => {
           required
         />
         <button type="submit" className="private-access-submit-button">
-          제출하기
+            제출하기
         </button>
       </form>
+
+      {/* ✅ 비밀번호 불일치 시 모달 */}
       <PrivateAccessModal
         show={showModal}
         onClose={handleModalClose}
