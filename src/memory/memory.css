@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 80%;
   margin: 0 auto;
 }
 
@@ -20,6 +20,7 @@
   height: auto;
   border-radius: 10px;
   object-fit: cover;
+  margin: 10px;
 }
 
 .groupInfo-text {
@@ -130,13 +131,51 @@
   margin-bottom: 15px;
 }
 
-.memory-filter-container {
+/* .memory-filter-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 90%;
   max-width: 1000px;
   margin-bottom: 20px;
+} */
+.memory-filter-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%; /* 메모리 헤더와 동일한 80%로 설정 */
+  max-width: 1200px;
+  margin-bottom: 20px;
+}
+
+/* 필터 버튼 컨테이너 */
+.filter-buttons {
+  display: flex;
+  gap: 10px; /* 버튼 사이 간격 */
+}
+
+/* 필터 버튼 기본 스타일 */
+.filter-btn {
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  padding: 8px 16px;
+  border-radius: 20px; /* pill 형태 */
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+/* 마우스 오버 */
+.filter-btn:hover {
+  background-color: #eee;
+}
+
+/* 활성 상태(공개/비공개/전체 보기 중 선택된 버튼) */
+.filter-btn.active {
+  background-color: black;
+  color: white;
+  border-color: black;
 }
 
 .filter-buttons img {

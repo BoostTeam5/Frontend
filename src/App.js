@@ -47,10 +47,7 @@ function App() {
               url은 path안에 넣고 보여줄 화면을 element 안에 넣어주시면 됩니다! 일단 테스트로 2개 정도 넣어놓았습니다! */}
 
           <Route path="/" element={<CreateGroup />} />
-          {/* <Route path="/Home" element={<Memory />} /> */}
           <Route path="/groups/:groupId" element={<Memory />} />
-
-          {/* <Route path="/newMemory" element={<MakeNewMemory />} /> */}
           <Route path="/newMemory/:groupId" element={<MakeNewMemory />} />
 
           <Route
