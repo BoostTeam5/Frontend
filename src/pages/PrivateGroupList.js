@@ -6,9 +6,10 @@ import privateIcon from "../assets/private_active.png";
 import searchBarBg from "../assets/searchBar.png";
 import searchIcon from "../assets/search.png";
 import addGroupIcon from "../assets/addGroup.png";
-import { useNavigate } from "react-router-dom";
-import noGroupAlert from "../assets/no_group_alert.png"; // ✅ 그룹 없음 이미지
+import noGroupAlert from "../assets/no_group_alert.png"; // 그룹 없음 이미지
 import addGroupIconLong from "../assets/addGroup_long.png";
+import { useNavigate } from "react-router-dom";
+import { fetchGroups } from "../api/groupApi"; // API 함수 임포트
 
 const PrivateGroupList = () => {
   const [groups, setGroups] = useState([]);
@@ -18,33 +19,32 @@ const PrivateGroupList = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ 샘플 그룹 데이터 생성
   useEffect(() => {
-    const sampleGroups = Array.from({ length: 100 }, (_, i) => ({
-      id: i + 1,
-      name: `비공개 그룹 ${i + 1}`,
-      dDay: Math.floor(Math.random() * 300),
-      posts: Math.floor(Math.random() * 10),
-      likes: Math.floor(Math.random() * 1500),
-      comments: Math.floor(Math.random() * 100),
-    }));
-    setGroups(sampleGroups);
+    const getGroups = async () => {
+      try {
+        const data = await fetchGroups();
+        // API에서 불러온 그룹 중 비공개(isPublic === false) 그룹만 사용
+        const privateGroups = data.filter((group) => !group.isPublic);
+        setGroups(privateGroups);
+      } catch (error) {
+        console.error("그룹 데이터 불러오기 실패:", error);
+      }
+    };
+    getGroups();
   }, []);
 
-  // ✅ 검색어 필터링
   const filteredGroups = groups.filter((group) =>
     group.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // ✅ 정렬 로직
   const sortedGroups = [...filteredGroups].sort((a, b) => {
-    if (sortBy === "likes") return b.likes - a.likes;
-    if (sortBy === "recent") return b.dDay - a.dDay;
-    if (sortBy === "comments") return b.comments - a.comments;
+    if (sortBy === "likes") return b.likeCount - a.likeCount;
+    if (sortBy === "recent")
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    if (sortBy === "comments") return b.postCount - a.postCount;
     return 0;
   });
 
-  // ✅ 더보기 버튼 로딩 처리
   const loadMore = () => {
     setLoading(true);
     setTimeout(() => {
@@ -55,7 +55,7 @@ const PrivateGroupList = () => {
 
   return (
     <div className="private-group-container">
-      {/* ✅ 상단 컨트롤 영역 */}
+      {/* 상단 컨트롤 영역 */}
       <div className="header-controls">
         <img
           src={publicIcon}
@@ -80,7 +80,7 @@ const PrivateGroupList = () => {
           />
         </div>
 
-        {/* ✅ 정렬 선택 박스 */}
+        {/* 정렬 선택 박스 */}
         <div className="sort-box">
           <select
             className="sort-select"
@@ -93,7 +93,7 @@ const PrivateGroupList = () => {
           </select>
         </div>
 
-        {/* ✅ 그룹 만들기 버튼 */}
+        {/* 그룹 만들기 버튼 */}
         <img
           src={addGroupIcon}
           alt="그룹 만들기"
@@ -102,7 +102,7 @@ const PrivateGroupList = () => {
         />
       </div>
 
-      {/* ✅ 그룹 없음 시 대체 화면 */}
+      {/* 그룹 없음 대체 화면 */}
       {sortedGroups.length === 0 ? (
         <div className="no-group-container">
           <img
@@ -119,14 +119,14 @@ const PrivateGroupList = () => {
         </div>
       ) : (
         <>
-          {/* ✅ 그룹 카드 목록 */}
+          {/* 그룹 카드 목록 */}
           <div className="private-group-list">
             {sortedGroups.slice(0, displayCount).map((group) => (
-              <PrivateGroupCard key={group.id} group={group} />
+              <PrivateGroupCard key={group.groupId} group={group} />
             ))}
           </div>
 
-          {/* ✅ 더보기 버튼 */}
+          {/* 더보기 버튼 */}
           {displayCount < sortedGroups.length && (
             <button className="load-more-btn" onClick={loadMore}>
               {loading ? "로딩 중..." : "더보기"}
