@@ -14,8 +14,8 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function MemoryDetail() {
-  const { id } = useParams(); // URL에서 postId 가져오기
-  const postId = parseInt(id, 10);
+  const { postId } = useParams(); // URL에서 postId 가져오기
+  //const postId = parseInt(id, 10);
   const [memoryData, setMemoryData] = useState(null); // 추억 상세 정보
   const [commentCount, setCommentCount] = useState(0);
   const [likeCount, setLikeCount] = useState(0);
