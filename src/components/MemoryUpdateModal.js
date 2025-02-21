@@ -3,77 +3,109 @@ import InputField, { Input } from "./InputField";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import TagInput from "./TagInput";
+import { updateMemory, uploadImage, verifyMemoryPassword } from "../memoryApi";
+import dayjs from "dayjs";
 
-function MemoryUpdateModal({ onClose, initialValues }) {
-  const [values, setValues] = useState(initialValues);
-  const [memoryImage, setMemoryImage] = useState();
-  const [tags, setTags] = useState(values.tags); // tags 데이터 관리
+const formatDate = (date) => {
+  return dayjs(date).format("YYYY-MM-DD");
+};
+
+function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
+  console.log(memory);
+  const [memoryValues, setMemoryValues] = useState(memory);
   const [tagInput, setTagInput] = useState(""); // 태그 input창 관리
-  const [passwordInput, setPasswordInput] = useState("");
-  const [isPublic, setIsPublic] = useState(true);
+  const [password, setPassword] = useState("");
 
-  const handleChange = (name, value) => {
-    setValues((prevValues) => ({
-      ...prevValues,
+  const [imageUrl, setImageUrl] = useState(memory.imageUrl || "");
+  const [isPublic, setIsPublic] = useState(memory.isPublic);
+
+  const [tags, setTags] = useState([]); // 받아온 데이터의 태그 값 관리
+
+  const handleInputChange = (e) => {
+    const { name, value, type, files } = e.target;
+    setMemoryValues((prev) => ({
+      ...prev,
       [name]: value,
+      // [name]: type === "file" ? files[0] : value, // 파일 저장
+      // imageUrl: type === "file" ? files[0].name : prev.imageUrl, // 파일명 저장
     }));
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    handleChange(name, value);
-  };
-
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) setMemoryImage(file.name); // 이미지 파일명 저장
-    //if (file) setMemoryImage(URL.createObjectURL(file));
+
+    try {
+      const response = await uploadImage(file);
+      console.log(response);
+      setImageUrl(response.imageUrl);
+      console.log(imageUrl);
+    } catch (e) {
+      console.error("이미지 업로드 실패", e);
+    }
   };
 
   const handleTagKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
       if (tagInput.trim() && !tags.includes(tagInput.trim())) {
-        setTags((prevTags) => [...prevTags, tagInput]);
+        setTags([...tags, tagInput]);
       }
       setTagInput(""); // 입력창 초기화
     }
   };
 
   const removeTag = (tagIdx) => {
-    setTags((prevTags) => prevTags.filter((_, idx) => idx !== tagIdx));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (values.postPassword === passwordInput) {
-      const formData = new FormData();
-      formData.append("nickname", values.nickname);
-      formData.append("title", values.title);
-      formData.append("content", values.content);
-      formData.append("imgFile", values.imageUrl);
-      formData.append("location", values.location);
-      formData.append("tags", JSON.stringify(tags));
-      formData.append("moment", values.moment);
-
-      console.log("폼 제출 완료", formData.get("nickname"));
-      //setValues(INITIAL_VALUES);
-      setTags([]);
-      onClose();
-    } else {
-      console.log("비밀번호가 틀렸습니다. 다시 입력하세요");
-      setPasswordInput("");
-    }
+    setTags(tags.filter((_, idx) => idx !== tagIdx));
   };
 
   useEffect(() => {
-    console.log("updated nickname: ", values.nickname);
-  }, [values.nickname]);
+    if (memoryValues?.post_tags?.length) {
+      const extractedTags = memoryValues.post_tags.map(
+        (pt) => pt.tags?.tagName || ""
+      );
+      if (tags.length === 0) {
+        setTags(extractedTags);
+      }
+    }
+  }, [memoryValues]);
+
+  const formatTagsForUpdate = (tags) => {
+    return tags.map((tagName) => ({ tags: { tagName } }));
+  };
+
+  // 추억 수정 요청 보내기
+  const handleUpdate = async () => {
+    if (!password) {
+      alert("비밀번호를 입력해주세요");
+      return;
+    }
+
+    try {
+      await verifyMemoryPassword(postId, password);
+
+      const updatedData = {
+        postId: postId,
+        ...memoryValues,
+        postPassword: password,
+        post_tags: formatTagsForUpdate(tags),
+        tags: tags,
+        imageUrl: imageUrl,
+      };
+      console.log(updatedData);
+      //const response = await updateMemory(postId, updatedData);
+      const response = await onUpdate(updatedData);
+      setTags(tags);
+      setMemoryValues(response);
+      onClose();
+    } catch (e) {
+      console.error(e.response?.data?.message || "추억 수정 실패");
+    }
+  };
 
   return (
     <Modal
       onClose={onClose}
-      onSubmit={handleSubmit}
+      onSubmit={handleUpdate}
       modalTitle="추억 수정"
       buttonTitle="등록하기"
     >
@@ -82,7 +114,7 @@ function MemoryUpdateModal({ onClose, initialValues }) {
           <InputField
             name="nickname"
             type="text"
-            value={values.nickname}
+            value={memoryValues.nickname}
             label="닉네임"
             onChange={handleInputChange}
             placeholder="닉네임을 입력해 주세요"
@@ -90,7 +122,7 @@ function MemoryUpdateModal({ onClose, initialValues }) {
           <InputField
             name="title"
             type="text"
-            value={values.title}
+            value={memoryValues.title}
             label="제목"
             onChange={handleInputChange}
             placeholder="제목을 입력해 주세요"
@@ -102,10 +134,11 @@ function MemoryUpdateModal({ onClose, initialValues }) {
                 display: "flex",
                 width: "100%",
                 justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
               <FileInput
-                value={memoryImage ? memoryImage : ""}
+                value={imageUrl || ""}
                 placeholder="파일을 선택해 주세요"
                 readOnly
               />
@@ -124,7 +157,7 @@ function MemoryUpdateModal({ onClose, initialValues }) {
             <ContentArea
               name="content"
               type="text"
-              value={values.content}
+              value={memoryValues.content}
               onChange={handleInputChange}
               placeholder="본문 내용을 입력해 주세요"
             />
@@ -135,7 +168,7 @@ function MemoryUpdateModal({ onClose, initialValues }) {
           <InputField
             name="location"
             type="text"
-            value={values.location}
+            value={memoryValues.location}
             label="장소"
             onChange={handleInputChange}
             placeholder="장소를 입력해 주세요"
@@ -151,7 +184,7 @@ function MemoryUpdateModal({ onClose, initialValues }) {
           <InputField
             name="moment"
             type="date"
-            value={values.moment}
+            value={formatDate(memoryValues.moment)}
             label="추억의 순간"
             onChange={handleInputChange}
             placeholder="추억의 순간을 입력해 주세요 (ex. YYYY-MM-DD)"
@@ -181,9 +214,9 @@ function MemoryUpdateModal({ onClose, initialValues }) {
           <InputField
             name="postpassword"
             type="password"
-            value={passwordInput}
+            value={password}
             label="수정 권한 인증"
-            onChange={(e) => setPasswordInput(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="비밀번호를 입력해 주세요"
           />
         </RightSection>
@@ -219,6 +252,7 @@ const Label = styled.label`
 
 const FileInput = styled(Input)`
   width: 260px;
+  text-align: left;
 `;
 
 const FileBtn = styled.label`
@@ -228,6 +262,7 @@ const FileBtn = styled.label`
   width: 100px;
   text-align: center;
   height: 40px;
+  margin-bottom: 20px;
   line-height: 40px;
   font-size: 14px;
 `;
