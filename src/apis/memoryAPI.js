@@ -126,6 +126,17 @@ export const checkPostPw = async (postId, data) => {
   }
 };
 
+export const checkGroupPw = async (groupId, data) => {
+  try {
+    const response = await api.post(
+      `/api/groups/${groupId}/verify-password`,
+      data
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 const MemoryApi = {
   createPost,
   readPosts,
@@ -136,6 +147,7 @@ const MemoryApi = {
   giveGroupLike,
   givePostLike,
   checkPostPw,
+  checkGroupPw,
 };
 
 export default MemoryApi;
