@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "http://54.180.25.217/api";
 
 // 댓글 조회 요청
 export const getComments = async (postId, page, pageSize) => {

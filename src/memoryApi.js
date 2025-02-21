@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/api/posts";
+const BASE_URL = "http://54.180.25.217/api/posts";
 
 // 게시글 상세 조회 요청
 export const getMemory = async (postId) => {
