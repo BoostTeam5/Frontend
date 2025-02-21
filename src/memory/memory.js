@@ -40,9 +40,6 @@ function Memory() {
   // 추억 만들기 버튼
   const [isMakeMemoryOpen, setIsMakeMemoryOpen] = useState(false);
 
-  // 추억 개수
-  const [countMemory, setCountMemory] = useState(3);
-
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
 
@@ -343,7 +340,11 @@ function Memory() {
               <div
                 key={index}
                 className="memory-item"
-                onClick={() => navigate(`/posts/${post.id}`)}
+                onClick={
+                  post.isPublic
+                    ? () => navigate(`/posts/${post.id}`)
+                    : () => navigate(`/privateMemory/${post.id}`)
+                }
               >
                 <div className="memory-content">
                   <div className="memory-meta">

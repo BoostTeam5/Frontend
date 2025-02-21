@@ -53,7 +53,10 @@ function App() {
           {/* <Route path="/newMemory" element={<MakeNewMemory />} /> */}
           <Route path="/newMemory/:groupId" element={<MakeNewMemory />} />
 
-          <Route path="/privateMemory" element={<CheckPwForPrivate />} />
+          <Route
+            path="/privateMemory/:postId"
+            element={<CheckPwForPrivate />}
+          />
 
           <Route path="/posts/:id" element={<MemoryDetail />} />
           <Route path="*" element={<UnfoundPage />} />
