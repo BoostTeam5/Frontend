@@ -51,6 +51,7 @@ function CreateCommentModal({ onClose, onSubmit }) {
       <InputField
         name="password"
         type="password"
+        value={password}
         label="비밀번호"
         onChange={(e) => setPassword(e.target.value)}
         placeholder="비밀번호를 입력해 주세요"
