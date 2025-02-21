@@ -1,42 +1,138 @@
 .create-group-container {
-  max-width: 400px;
-  margin: 20px auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background: #fff;
-}
-
-.create-group-container label {
-  font-weight: bold;
-  display: block;
-  margin-top: 10px;
-}
-
-.create-group-container input,
-.create-group-container textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.create-group-container button {
-  width: 100%;
-  margin-top: 15px;
-  padding: 10px;
-  background: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-.create-group-container button:hover {
-  background: #0056b3;
-}
-
-.error-text {
-  color: red;
-  text-align: center;
-}
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .create-group-title {
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30.05px;
+    letter-spacing: -3%;
+    text-align: center;
+    margin-top: 40px;
+  }
+  
+  .create-group-form {
+    margin-top: 60px;
+    width: 400px;
+  }
+  
+  .create-group-label {
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 20.03px;
+    letter-spacing: -3%;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  .create-group-input {
+    width: 400px;
+    height: 45px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 40px;
+    box-sizing: border-box;
+    text-align: left;
+  }
+  
+  .create-group-image-upload {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+  
+  .create-group-file-display {
+    width: 270px;
+    height: 45px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    color: #888;
+    text-align: left;
+  }
+  
+  .create-group-file-button {
+    width: 120px;
+    height: 45px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: white;
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  
+  .create-group-input::placeholder,
+  .create-group-file-display,
+  .create-group-textarea::placeholder {
+    text-align: left; /* 👉 왼쪽 정렬 */
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 400;
+    font-size: 14px;
+    color: #888;
+  }
+  
+  /* 📄 그룹 소개 글씨체 통일 */
+  .create-group-textarea {
+    width: 400px;
+    height: 120px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    resize: none;
+    box-sizing: border-box;
+    margin-bottom: 40px;
+    font-family: "Spoqa Han Sans Neo"; /* 글씨체 통일 */
+    font-weight: 400;
+    font-size: 14px;
+    color: #282828;
+  }
+  
+  .create-group-toggle-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .create-group-toggle-text {
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17.53px;
+    letter-spacing: -3%;
+    margin-right: 20px;
+  }
+  
+  /* 🌀 토글 이미지 모서리 둥글게 처리 */
+  .create-group-toggle {
+    width: 50px;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 15px; /* ✅ 모서리 둥글게 처리 */
+    object-fit: cover;
+  }
+  
+  .create-group-submit-button {
+    width: 400px;
+    height: 50px;
+    border-radius: 6px;
+    background-color: #282828;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 600;
+    font-size: 18px;
+    margin-top: 60px;
+  }
+  
+  .create-group-submit-button:hover {
+    background-color: #555;
+  }
+  
