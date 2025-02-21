@@ -40,9 +40,8 @@ function Memory() {
   // 추억 만들기 버튼
   const [isMakeMemoryOpen, setIsMakeMemoryOpen] = useState(false);
   const [badges, setBadges] = useState([]);
-
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [hasMore, setHasMore] = useState(false); // 더 불러올 게시글이 있는지 여부
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
   };
@@ -127,6 +126,12 @@ function Memory() {
     setIsEditModalOpen(false);
   };
 
+  // 필터나 정렬, 검색어 등 변화 시 페이지와 게시글 초기화
+  useEffect(() => {
+    setPage(1);
+    setPosts([]);
+  }, [groupId, sortBy, keyword, isPublic]);
+
   //useEffect로 그룹의 게시글 가져오기 */
   useEffect(() => {
     const fetchPosts = async () => {
@@ -143,16 +148,16 @@ function Memory() {
         // const uniquePosts = Array.from(
         //   new Set(response.data.map((post) => post.id))
         // ).map((id) => response.data.find((post) => post.id === id));
-
+        //setPosts(uniquePosts);
         if (page === 1) {
           setPosts(response.data);
-          //setPosts(uniquePosts);
         } else {
           setPosts((prevPosts) => [...prevPosts, ...response.data]);
         }
 
         // 만약 불러온 게시글 개수가 pageSize와 같다면 더 불러올 게시글이 있다고 가정
         setHasMore(response.data.length === pageSize);
+        //setPosts(response.data);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
       }
