@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import PublicGroupCard from "../components/PublicGroupCard";
 import "../style/PrivateGroupList.css"; // 동일한 스타일 사용
-import publicIcon from "../assets/public_active.png"; // 공개 active 아이콘
-import privateIcon from "../assets/private_default.png"; // 비공개 default 아이콘
+import publicActiveIcon from "../assets/public_active.png"; // 공개 active 아이콘
+import privateDefaultIcon from "../assets/private_default.png";
+import publicDefaultIcon from "../assets/public_default.png";
+import privateActiveIcon from "../assets/private_active.png";
 import searchBarBg from "../assets/searchBar.png";
 import searchIcon from "../assets/search.png";
 import addGroupIcon from "../assets/addGroup.png";
 import noGroupAlert from "../assets/no_group_alert.png"; // 그룹 없음 이미지
 import addGroupIconLong from "../assets/addGroup_long.png";
 import { useNavigate } from "react-router-dom";
-import { fetchGroups } from "../api/groupApi"; // API 함수 임포트
 import groupApi from "../api/groupApi";
+import PrivateGroupCard from "../components/PrivateGroupCard";
 
 const PublicGroupList = () => {
   const [groups, setGroups] = useState([]);
@@ -40,29 +42,7 @@ const PublicGroupList = () => {
       }
     };
     getGroups();
-  }, []);
-
-  // 생성
-
-  // const createGroup = async () => {
-  //   const postData = {
-  //     name,
-  //     password,
-  //     imageUrl,
-  //     isPublic,
-  //     introduction,
-  //   };
-
-  //   try {
-  //     const response = await groupApi.createGroup(postData);
-  //     // API에서 불러온 그룹 중 공개(isPublic === true) 그룹만 사용
-  //     console.log(response.data);
-  //     //const publicGroups = data.filter((group) => group.isPublic);
-  //     setGroups(response.data);
-  //   } catch (error) {
-  //     console.error("그룹 데이터 불러오기 실패:", error);
-  //   }
-  // };
+  }, [isPublic, sortBy, keyword]);
 
   const filteredGroups = groups.filter((group) =>
     group.name.toLowerCase().includes(keyword.toLowerCase())
@@ -88,12 +68,17 @@ const PublicGroupList = () => {
     <div className="private-group-container">
       {/* 상단 UI */}
       <div className="header-controls">
-        <img src={publicIcon} alt="공개 버튼" className="public-btn" />
         <img
-          src={privateIcon}
+          src={isPublic ? publicActiveIcon : publicDefaultIcon}
+          alt="공개 버튼"
+          className="public-btn"
+          onClick={() => setIsPublic(true)}
+        />
+        <img
+          src={!isPublic ? privateActiveIcon : privateDefaultIcon}
           alt="비공개 버튼"
           className="private-btn"
-          onClick={() => navigate("/private-groups")}
+          onClick={() => setIsPublic(false)}
         />
         <div className="search-bar">
           <img src={searchBarBg} alt="검색창 배경" className="search-bg" />
@@ -149,12 +134,18 @@ const PublicGroupList = () => {
           {/* 그룹 카드 목록 */}
           <div className="private-group-list">
             {sortedGroups.slice(0, displayCount).map((group) => (
-              <div
-                key={group.groupId}
-                onClick={() => navigate(`/groups/${group.id}`)}
-                style={{ cursor: "pointer" }}
-              >
-                <PublicGroupCard group={group} />
+              <div key={group.groupId} style={{ cursor: "pointer" }}>
+                {isPublic ? (
+                  <PublicGroupCard
+                    group={group}
+                    onClick={() => navigate(`/groups/${group.id}`)}
+                  />
+                ) : (
+                  <PrivateGroupCard
+                    group={group}
+                    onClick={() => navigate(`/private-groups/${group.id}`)}
+                  />
+                )}
               </div>
             ))}
           </div>

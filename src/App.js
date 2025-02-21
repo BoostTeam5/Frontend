@@ -51,7 +51,10 @@ function App() {
           {/* 공개 그룹 목록 (기본 경로) */}
           <Route path="/" element={<PublicGroupList />} />
           {/* 비공개 그룹 목록 */}
-          <Route path="/private-groups" element={<PrivateGroupList />} />
+          <Route
+            path="/private-groups/:groupId"
+            element={<PrivateGroupList />}
+          />
           {/* 그룹 생성 페이지 */}
           <Route path="/createGroup" element={<CreateGroup />} />
           {/* 비공개 그룹 접근 (비밀번호 확인 페이지) */}
