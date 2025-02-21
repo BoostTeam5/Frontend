@@ -235,8 +235,6 @@ function Memory() {
               </span>
               <span>{group.isPublic ? "공개" : "비공개"}</span>
             </div>
-
-            <span>{group.isPublic ? "공개" : "비공개"}</span>
           </div>
 
           <div className="info2">
