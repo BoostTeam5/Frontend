@@ -199,7 +199,7 @@
 }
 
 input:checked + .slider-memory {
-  background-color: #4caf50;
+  background-color: black;
 }
 
 input:checked + .slider-memory:before {
@@ -209,7 +209,8 @@ input:checked + .slider-memory:before {
 /* 업로드 버튼 스타일 */
 .upload-btn-create {
   width: 500px;
-  margin-top: 20px;
+  margin-top: 70px;
+  margin-right: 600px;
   cursor: pointer;
   align-self: center;
 }
