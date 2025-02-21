@@ -7,9 +7,11 @@ function DeleteModal({ onClose, onDelete, title }) {
 
   const handleDeleteSubmit = (e) => {
     e.preventDefault();
+    if (password.trim() === "") {
+      alert("비밀번호를 입력해주세요.");
+      return;
+    }
     onDelete(password);
-    setPassword("");
-    onClose();
   };
 
   return (
