@@ -20,7 +20,7 @@ const InputField = ({
       <Input
         name={name}
         type={type}
-        value={value}
+        value={value ?? ""}
         onChange={onChange}
         onKeyDown={onKeyDown}
         placeholder={placeholder}

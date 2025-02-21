@@ -127,7 +127,6 @@ function CommentList({ postId, commentCount, setCommentCount }) {
   const handleCreateComment = async (nickname, content, password) => {
     try {
       await createComment(postId, nickname, content, password);
-      //setComments((prev) => [...prev, response]);
       fetchComments(); // 댓글 목록 새로고침
       setIsCreateOpen(false);
     } catch (e) {

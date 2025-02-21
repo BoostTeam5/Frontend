@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = "http://localhost:5000/api/posts";
 
 // 게시글 상세 조회 요청
 export const getMemory = async (postId) => {
@@ -40,7 +40,7 @@ export const likeMemory = async (postId) => {
 // 게시글 수정 요청
 export const updateMemory = async (postId, updateData) => {
   try {
-    const response = await axios.put(`${BASE_URL}/posts/${postId}`, updateData);
+    const response = await axios.put(`${BASE_URL}/${postId}`, updateData);
     return response.data;
   } catch (e) {
     console.error("추억 수정 실패", e);
@@ -50,13 +50,33 @@ export const updateMemory = async (postId, updateData) => {
 
 // 게시글 삭제 요청
 export const deleteMemory = async (postId, postPassword) => {
+  console.log(postId, postPassword);
   try {
-    const response = await axios.delete(`${BASE_URL}/posts/${postId}`, {
+    const response = await axios.delete(`${BASE_URL}/${postId}`, {
       data: { postPassword },
     });
     return response.data;
   } catch (e) {
     console.error("추억 삭제 실패", e);
     throw e;
+  }
+};
+
+// 이미지
+export const uploadImage = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append("image", file); // API 문서에 맞춰 key 이름을 "image"로 설정
+
+    const response = await axios.post(`/api/image`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data", // 파일 업로드를 위한 Content-Type
+      },
+    });
+
+    return response.data; // { "imageUrl": "string" }
+  } catch (error) {
+    console.log("failed to upload image", error);
+    throw error;
   }
 };

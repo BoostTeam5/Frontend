@@ -3,7 +3,7 @@ import InputField, { Input } from "./InputField";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import TagInput from "./TagInput";
-import { updateMemory, verifyMemoryPassword } from "../memoryApi";
+import { updateMemory, uploadImage, verifyMemoryPassword } from "../memoryApi";
 import dayjs from "dayjs";
 
 const formatDate = (date) => {
@@ -11,11 +11,13 @@ const formatDate = (date) => {
 };
 
 function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
+  console.log(memory);
   const [memoryValues, setMemoryValues] = useState(memory);
-  const [memoryImage, setMemoryImage] = useState();
   const [tagInput, setTagInput] = useState(""); // 태그 input창 관리
   const [password, setPassword] = useState("");
-  const [isPublic, setIsPublic] = useState(true);
+
+  const [imageUrl, setImageUrl] = useState(memory.imageUrl || "");
+  const [isPublic, setIsPublic] = useState(memory.isPublic);
 
   const [tags, setTags] = useState([]); // 받아온 데이터의 태그 값 관리
 
@@ -23,15 +25,23 @@ function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
     const { name, value, type, files } = e.target;
     setMemoryValues((prev) => ({
       ...prev,
-      [name]: type === "file" ? files[0] : value, // 파일 저장
-      imageUrl: type === "file" ? files[0].name : prev.imageUrl, // 파일명 저장
+      [name]: value,
+      // [name]: type === "file" ? files[0] : value, // 파일 저장
+      // imageUrl: type === "file" ? files[0].name : prev.imageUrl, // 파일명 저장
     }));
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    //if (file) setMemoryImage(file.name); // 이미지 파일명 저장
-    if (file) setMemoryImage(URL.createObjectURL(file));
+
+    try {
+      const response = await uploadImage(file);
+      console.log(response);
+      setImageUrl(response.imageUrl);
+      console.log(imageUrl);
+    } catch (e) {
+      console.error("이미지 업로드 실패", e);
+    }
   };
 
   const handleTagKeyDown = (e) => {
@@ -71,8 +81,7 @@ function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
     }
 
     try {
-      // 비밀번호가 계속 일치하지 않다고 함... 이유를 모르겠음
-      //const checkPassword = await verifyMemoryPassword(postId, password);
+      await verifyMemoryPassword(postId, password);
 
       const updatedData = {
         postId: postId,
@@ -80,28 +89,18 @@ function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
         postPassword: password,
         post_tags: formatTagsForUpdate(tags),
         tags: tags,
+        imageUrl: imageUrl,
       };
+      console.log(updatedData);
       //const response = await updateMemory(postId, updatedData);
-      const response = onUpdate(updatedData);
+      const response = await onUpdate(updatedData);
+      setTags(tags);
       setMemoryValues(response);
-      setTags([...memoryValues.tags]);
       onClose();
     } catch (e) {
       console.error(e.response?.data?.message || "추억 수정 실패");
     }
   };
-
-  /*
-  const handleSubmit = () => {
-    if (password !== memory.postPassword) {
-      alert("비밀번호가 일치하지 않습니다. 다시 입력하세요.");
-      setPassword("");
-      return;
-    }
-    onSave({ ...memoryValues, postPassword: password });
-    onClose();
-  }; // onSubmit에 전달
-  */
 
   return (
     <Modal
@@ -139,7 +138,7 @@ function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
               }}
             >
               <FileInput
-                value={memoryValues.imageUrl || ""}
+                value={imageUrl || ""}
                 placeholder="파일을 선택해 주세요"
                 readOnly
               />

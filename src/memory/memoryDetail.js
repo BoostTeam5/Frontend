@@ -20,7 +20,7 @@ function MemoryDetail() {
   const [commentCount, setCommentCount] = useState(0);
   const navigate = useNavigate();
 
-  // 게시글 상세 조회회
+  // 게시글 상세 조회
   useEffect(() => {
     const fetchMemoryDetails = async () => {
       try {
@@ -39,7 +39,7 @@ function MemoryDetail() {
   // 댓글 개수 업데이트
   const updateCommentCount = (newCount) => {
     setCommentCount(newCount);
-  }
+  };
 
   // 추억 수정 요청
   const handleUpdateMemory = async (updatedMemory) => {
@@ -53,15 +53,11 @@ function MemoryDetail() {
     }
   };
 
-  // 추억 삭제 요청
+  // 추억 삭제 요청 -> 문제있음
   const handleDeleteMemory = async (password) => {
     try {
-      const response = await deleteMemory(postId, password);
-
-      if (response && response.message === "게시글 삭제 성공") {
-        alert("추억 삭제 완료");
-        navigate("/"); // 우선 삭제 후 메인 페이지 이동
-      }
+      await deleteMemory(postId, password);
+      navigate("/"); // 우선 삭제 후 메인 페이지 이동
     } catch (e) {
       alert("추억 삭제 실패");
     }
@@ -75,6 +71,7 @@ function MemoryDetail() {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          gap: "100px"
         }}
       >
         {memoryData && (

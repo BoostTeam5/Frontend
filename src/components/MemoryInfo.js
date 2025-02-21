@@ -35,7 +35,7 @@ function MemoryInfo({ postId, memory, commentCount, onUpdate, onDelete }) {
 
   const handleUpdate = async (updatedData) => {
     const response = await onUpdate(updatedData);
-    setMemoryData(response);
+    setMemoryData(response); // response가 undefined임
     setTags(response.tags);
     setIsEditOpen(false); // API 요청이 성공한 후 모달 닫기
   };
@@ -133,7 +133,7 @@ function MemoryInfo({ postId, memory, commentCount, onUpdate, onDelete }) {
       </div>
 
       <Content>
-        <img src={contentImg} alt="본문 첨부사진" />
+        <img src={memory.imageUrl} alt="본문 첨부사진" />
         <p>{memory.content}</p>
       </Content>
 
