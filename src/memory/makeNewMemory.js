@@ -101,10 +101,10 @@ function MakeNewMemory({ onClose }) {
   };
 
   // 인증 모달에서 성공 시 → 실제 글 등록
-  const handleAuthSuccess = () => {
-    setAuthModalOpen(false);
-    handleUpload(); // 인증 성공하면 실제 업로드 로직 실행
-  };
+  // const handleAuthSuccess = () => {
+  //   setAuthModalOpen(false);
+  //   handleUpload(); // 인증 성공하면 실제 업로드 로직 실행
+  // };
 
   return (
     <div className="modal-overlay-memory">
@@ -221,14 +221,14 @@ function MakeNewMemory({ onClose }) {
               src={upload}
               alt="업로드 버튼"
               className="upload-btn-create"
-              onClick={openAuthModal}
+              onClick={handleUpload}
             />
           </div>
         </div>
       </div>
 
       {/* 그룹 비밀번호 인증 모달 */}
-      {authModalOpen && (
+      {/* {authModalOpen && (
         <div className="modal-overlay-memory">
           <CheckAuthorizeCreateMemory
             groupId={groupId}
@@ -236,7 +236,7 @@ function MakeNewMemory({ onClose }) {
             onClose={() => setAuthModalOpen(false)} // 모달 닫기
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 }
