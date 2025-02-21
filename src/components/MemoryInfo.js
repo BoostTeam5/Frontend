@@ -71,6 +71,7 @@ function MemoryInfo({
         flexDirection: "column",
         alignItems: "center",
         maxWidth: "100%",
+        
       }}
     >
       <div>

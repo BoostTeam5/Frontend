@@ -19,7 +19,6 @@ function MemoryDetail() {
   const [memoryData, setMemoryData] = useState(null); // 추억 상세 정보
   const [commentCount, setCommentCount] = useState(0);
   const [likeCount, setLikeCount] = useState(0);
-  const [isPublic, setIsPublic] = useState(true);
   const navigate = useNavigate();
 
   // 게시글 상세 조회
@@ -47,7 +46,7 @@ function MemoryDetail() {
   // 공감 개수 업데이트
   const updateLikeCount = (newCount) => {
     setLikeCount(newCount);
-  }
+  };
 
   // 추억 수정 요청
   const handleUpdateMemory = async (updatedMemory) => {
@@ -80,6 +79,7 @@ function MemoryDetail() {
           flexDirection: "column",
           alignItems: "center",
           gap: "100px",
+          maxWidth: "100%",
         }}
       >
         {memoryData && (
