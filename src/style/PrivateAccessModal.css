@@ -1,0 +1,40 @@
+
+ 
+  .modal-content-private {
+    width: 480px; /* ✅ 모달 너비 */
+    height: 298px; /* ✅ 모달 높이 */
+    background: white;
+    padding: 0;
+    border-radius: 12px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .modal-title-private {
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30.05px;
+    letter-spacing: -3%;
+    text-align: center;
+    margin-top: 80px; /* ✅ 상단에서 80px 아래 */
+  }
+  
+  .modal-message-private {
+    margin-top: 20px; /* ✅ 제목에서 20px 아래 */
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17.53px;
+    letter-spacing: -3%;
+    text-align: center;
+    color: #555;
+  }
+  
+  .modal-okay-button-private {
+    width: 400px; /* ✅ 버튼 크기 400px */
+    height: 50px; /* ✅ 버튼 높이 50px */
+    margin-top: 60px; /* ✅ 텍스트에서 60px 아래 */
+    cursor: pointer;
+  }
+  

@@ -14,7 +14,8 @@
 /* 모달 팝업 스타일 */
 .modal-content-del {
   background: white;
-  width: 320px; /* 팝업 크기 조정 */
+  width: 600px; /* 팝업 크기 조정 */
+  height: 250px;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -60,7 +61,7 @@ input {
   padding: 10px;
   font-size: 20px;
   position: absolute;
-  margin-left: 140px;
+  margin-left: 250px;
   top: 0;
 }
 
