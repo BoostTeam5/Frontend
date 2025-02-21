@@ -56,8 +56,8 @@ function CommentItem({ comment, refreshComments }) {
           gap: "10px",
         }}
       >
-        <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
-          <span>{comment.nickname}</span>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <span style={{ fontSize: "18px" }}>{comment.nickname}</span>
           <span style={{ color: "#b8b8b8" }}>
             {formatDate(comment.createdAt)}
           </span>
@@ -145,6 +145,7 @@ function CommentList({ postId, commentCount, setCommentCount }) {
           top: "0",
           left: "50%",
           transform: "translateX(-50%)",
+          fontSize: "16px",
         }}
       >
         댓글 등록하기
@@ -164,7 +165,7 @@ function CommentList({ postId, commentCount, setCommentCount }) {
           gap: "10px",
         }}
       >
-        <span>댓글 {commentCount}</span>
+        <span style={{ fontSize: "20px" }}>댓글 {commentCount}</span>
         <img src={line} alt="구분선" />
         <ul style={{ padding: "0px" }}>
           {comments.map((comment) => (

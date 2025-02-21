@@ -60,11 +60,11 @@ function MemoryDetail() {
     }
   };
 
-  // 추억 삭제 요청 -> 문제있음
+  // 추억 삭제 요청
   const handleDeleteMemory = async (password) => {
     try {
       await deleteMemory(postId, password);
-      navigate("/"); // 우선 삭제 후 메인 페이지 이동
+      navigate("/"); // 삭제 후 메인 페이지 이동
     } catch (e) {
       alert("추억 삭제 실패");
     }
@@ -80,6 +80,7 @@ function MemoryDetail() {
           alignItems: "center",
           gap: "100px",
           maxWidth: "100%",
+          paddingBottom: "50px",
         }}
       >
         {memoryData && (

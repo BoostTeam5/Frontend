@@ -11,7 +11,6 @@ const formatDate = (date) => {
 };
 
 function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
-  console.log(memory);
   const [memoryValues, setMemoryValues] = useState(memory);
   const [tagInput, setTagInput] = useState(""); // 태그 input창 관리
   const [password, setPassword] = useState("");
@@ -19,7 +18,7 @@ function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
   const [imageUrl, setImageUrl] = useState(memory.imageUrl || "");
   const [isPublic, setIsPublic] = useState(memory.isPublic);
 
-  const [tags, setTags] = useState([]); // 받아온 데이터의 태그 값 관리
+  const [tags, setTags] = useState(memoryValues.tags || []); // 받아온 데이터의 태그 값 관리
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
