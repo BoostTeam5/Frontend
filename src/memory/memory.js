@@ -182,7 +182,7 @@ function Memory() {
       }
     } catch (error) {
       console.error("그룹 삭제 중 오류 발생:", error);
-      alert("그룹 삭제 중 문제가 발생했습니다.");
+      alert("비밀번호를 다시 입력해주세요");
     }
   };
 
@@ -225,7 +225,17 @@ function Memory() {
         {/* 중앙: 그룹 정보 */}
         <div className="groupInfo-text">
           <div className="info1">
-            <span>{"D+265      "}</span>
+            <div className="info1">
+              <span>
+                D+
+                {Math.floor(
+                  (new Date() - new Date(group.createdAt)) /
+                    (1000 * 60 * 60 * 24)
+                )}{" "}
+              </span>
+              <span>{group.isPublic ? "공개" : "비공개"}</span>
+            </div>
+
             <span>{group.isPublic ? "공개" : "비공개"}</span>
           </div>
 
