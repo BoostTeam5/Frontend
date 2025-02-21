@@ -10,7 +10,7 @@ const api = axios.create({
 
 // 그룹 생성 API (POST) - 실제 엔드포인트가 "/create"라면 아래와 같이 사용
 export const buildGroup = async (groupData) => {
-  const response = await api.post("/groups", groupData);
+  const response = await api.post("/api/groups", groupData);
   return response.data;
 };
 

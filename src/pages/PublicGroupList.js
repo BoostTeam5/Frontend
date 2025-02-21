@@ -44,25 +44,25 @@ const PublicGroupList = () => {
 
   // 생성
 
-  const createGroup = async () => {
-    const postData = {
-      name,
-      password,
-      imageUrl,
-      isPublic,
-      introduction,
-    };
+  // const createGroup = async () => {
+  //   const postData = {
+  //     name,
+  //     password,
+  //     imageUrl,
+  //     isPublic,
+  //     introduction,
+  //   };
 
-    try {
-      const response = await groupApi.createGroup(postData);
-      // API에서 불러온 그룹 중 공개(isPublic === true) 그룹만 사용
-      console.log(response.data);
-      //const publicGroups = data.filter((group) => group.isPublic);
-      setGroups(response.data);
-    } catch (error) {
-      console.error("그룹 데이터 불러오기 실패:", error);
-    }
-  };
+  //   try {
+  //     const response = await groupApi.createGroup(postData);
+  //     // API에서 불러온 그룹 중 공개(isPublic === true) 그룹만 사용
+  //     console.log(response.data);
+  //     //const publicGroups = data.filter((group) => group.isPublic);
+  //     setGroups(response.data);
+  //   } catch (error) {
+  //     console.error("그룹 데이터 불러오기 실패:", error);
+  //   }
+  // };
 
   const filteredGroups = groups.filter((group) =>
     group.name.toLowerCase().includes(keyword.toLowerCase())
@@ -125,9 +125,7 @@ const PublicGroupList = () => {
           src={addGroupIcon}
           alt="그룹 만들기"
           className="create-group-btn"
-          onClick={() => {
-            createGroup;
-          }}
+          onClick={() => navigate("/createGroup")}
         />
       </div>
 
@@ -151,7 +149,13 @@ const PublicGroupList = () => {
           {/* 그룹 카드 목록 */}
           <div className="private-group-list">
             {sortedGroups.slice(0, displayCount).map((group) => (
-              <PublicGroupCard key={group.groupId} group={group} />
+              <div
+                key={group.groupId}
+                onClick={() => navigate(`/groups/${group.id}`)}
+                style={{ cursor: "pointer" }}
+              >
+                <PublicGroupCard group={group} />
+              </div>
             ))}
           </div>
 
