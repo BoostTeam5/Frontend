@@ -114,9 +114,12 @@ export const givePostLike = async (postId) => {
   }
 };
 
-export const checkPostPw = async (postId) => {
+export const checkPostPw = async (postId, data) => {
   try {
-    const response = await api.post(`/api/posts/${postId}/verify-password`);
+    const response = await api.post(
+      `/api/posts/${postId}/verify-password`,
+      data
+    );
     return response.data;
   } catch (error) {
     console.log(error);

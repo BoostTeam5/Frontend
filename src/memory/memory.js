@@ -24,7 +24,7 @@ function Memory() {
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [sortBy, setSortBy] = useState("latest");
+  const [sortBy, setSortBy] = useState("latest"); //  latest | mostCommented | mostLiked
   const [keyword, setKeyword] = useState("");
 
   // 공개 비공개 그룹별 api에서 isPublic 속성에 따라서 데이터 분류하고 저장
@@ -41,8 +41,9 @@ function Memory() {
   const [isMakeMemoryOpen, setIsMakeMemoryOpen] = useState(false);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
-
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
   // 추억 만들기 버튼
   const handleMakeMemory = () => {
     setIsMakeMemoryOpen(true);
@@ -71,6 +72,20 @@ function Memory() {
   const handleFilterChange = (value) => {
     setIsPublic(value); // ✅ isPublic 값 변경하여 API 다시 호출
   };
+
+  const sortOptions = [
+    { value: "latest", label: "최신순" },
+    { value: "mostCommented", label: "게시글 많은 순" },
+    { value: "mostLiked", label: "공감순" },
+    { value: "badge", label: "획득 뱃지순" },
+  ];
+
+  // 드롭다운에서 정렬 옵션 선택 시 호출되는 핸들러
+  const handleSortOptionClick = (option) => {
+    setSortBy(option.value);
+    setDropdownOpen(false);
+  };
+
   // 태그 혹은 제목으로 검색하기
   const handleKeywordChange = (event) => {
     setKeyword(event.target.value);
@@ -118,6 +133,35 @@ function Memory() {
   };
 
   /* useEffect로 그룹의 게시글 가져오기 */
+  // useEffect(() => {
+  //   const fetchPosts = async () => {
+  //     try {
+  //       const response = await MemoryApi.readPosts(
+  //         groupId,
+  //         page,
+  //         pageSize,
+  //         sortBy,
+  //         keyword,
+  //         isPublic
+  //       );
+
+  //       const uniquePosts = Array.from(
+  //         new Set(response.data.map((post) => post.id))
+  //       ).map((id) => response.data.find((post) => post.id === id));
+
+  //       setPosts(uniquePosts);
+  //       //setPosts(response.data);
+  //       console.log(posts.length);
+  //     } catch (error) {
+  //       console.error("Failed to fetch posts:", error);
+  //     }
+  //   };
+
+  //   if (groupId) {
+  //     fetchPosts();
+  //   }
+  // }, [groupId, page, pageSize, sortBy, keyword, isPublic]); // ✅ 값이 바뀌면 자동으로 실행
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -135,7 +179,6 @@ function Memory() {
         ).map((id) => response.data.find((post) => post.id === id));
 
         setPosts(uniquePosts);
-        //setPosts(response.data);
         console.log(posts.length);
       } catch (error) {
         console.error("Failed to fetch posts:", error);
@@ -145,7 +188,7 @@ function Memory() {
     if (groupId) {
       fetchPosts();
     }
-  }, [groupId, page, pageSize, sortBy, keyword, isPublic]); // ✅ 값이 바뀌면 자동으로 실행
+  }, [groupId, page, pageSize, sortBy, keyword, isPublic]);
 
   // 그룹 삭제 API
   const deleteGroupAPI = async (password) => {
@@ -325,16 +368,16 @@ function Memory() {
 
           <div className="dropdown">
             <button className="dropdown-btn" onClick={toggleDropdown}>
-              공감순
+              {sortOptions.find((opt) => opt.value === sortBy)?.label || sortBy}
               <span>▼</span>
             </button>
-
             {dropdownOpen && (
               <ul className="dropdown-menu">
-                <li>최신순</li>
-                <li>게시글 많은 순</li>
-                <li>공감순</li>
-                <li>획득 뱃지순</li>
+                {sortOptions.map((option, index) => (
+                  <li key={index} onClick={() => handleSortOptionClick(option)}>
+                    {option.label}
+                  </li>
+                ))}
               </ul>
             )}
           </div>
