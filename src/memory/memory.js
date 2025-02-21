@@ -6,8 +6,8 @@ import defaultImg from "../assets/family.png";
 import line from "../assets/line.png";
 import likeBtn from "../assets/likeBtn.png";
 import addMemory from "../assets/addMemory.png";
-//import public_active from "../assets/public_active.png";
-import public_active from "../assets/private_active.png";
+import public_active from "../assets/public_active.png";
+//import public_active from "../assets/private_active.png";
 import public_default from "../assets/public_default.png";
 import private_active from "../assets/private_active.png";
 import private_default from "../assets/private_default.png";
@@ -40,6 +40,7 @@ function Memory() {
 
   // 추억 만들기 버튼
   const [isMakeMemoryOpen, setIsMakeMemoryOpen] = useState(false);
+  const [badges, setBadges] = useState([]);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
@@ -58,19 +59,6 @@ function Memory() {
 
   const loadMoreData = () => {
     console.log("더보기");
-  };
-  // 공개 비공개 버튼 클릭 핸들러
-  const handleToPublicActive = () => {
-    setIsPublic(true);
-  };
-  const handleToPublicDefault = () => {
-    setIsPublic(false);
-  };
-  const handleToPrivateActive = () => {
-    setIsPrivate(true);
-  };
-  const handleToPrivateDefault = () => {
-    setIsPrivate(false);
   };
 
   const handleFilterChange = (value) => {
@@ -117,6 +105,8 @@ function Memory() {
     try {
       const data = await MemoryApi.readGroupInfo(groupId);
       setGroup(data);
+      setBadges(data.badges);
+      //console.log(data.badges[0].name);
       console.log("✅ 최신 그룹 정보:", data);
     } catch (error) {
       console.error("❌ 그룹 정보 불러오기 실패:", error);
@@ -165,34 +155,6 @@ function Memory() {
       fetchPosts();
     }
   }, [groupId, page, pageSize, sortBy, keyword, isPublic]); // ✅ 값이 바뀌면 자동으로 실행
-
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     try {
-  //       const response = await MemoryApi.readPosts(
-  //         groupId,
-  //         page,
-  //         pageSize,
-  //         sortBy,
-  //         keyword,
-  //         isPublic
-  //       );
-  //       console.log("서버 응답 데이터:", response.data);
-  //       const uniquePosts = Array.from(
-  //         new Set(response.data.map((post) => post.id))
-  //       ).map((id) => response.data.find((post) => post.id === id));
-
-  //       setPosts(uniquePosts);
-  //       console.log(posts.length);
-  //     } catch (error) {
-  //       console.error("Failed to fetch posts:", error);
-  //     }
-  //   };
-
-  //   if (groupId) {
-  //     fetchPosts();
-  //   }
-  // }, [groupId, page, pageSize, sortBy, keyword, isPublic]);
 
   // 그룹 삭제 API
   const deleteGroupAPI = async (password) => {
@@ -268,10 +230,13 @@ function Memory() {
           </div>
 
           {/* 획득 배지 */}
+
           <div className="badge-container">
-            <span className="badge">🏅 7일 연속 게시글 등록</span>
-            <span className="badge">🏆 그룹 공감 1만 개 이상 받기</span>
-            <span className="badge">💖 추억 공감 1만 개 이상 받기</span>
+            {badges.map((badge) => (
+              <span key={badge.id} className="badge">
+                {badge.name}
+              </span>
+            ))}
           </div>
         </div>
 
