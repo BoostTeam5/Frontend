@@ -108,7 +108,7 @@ function CommentList({ postId, commentCount, setCommentCount }) {
   const [comments, setComments] = useState([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  // 댓글 목록 조회회
+  // 댓글 목록 조회
   const fetchComments = async () => {
     try {
       const response = await getComments(postId, 1, 10);

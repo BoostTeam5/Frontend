@@ -22,12 +22,10 @@ function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
   const [tags, setTags] = useState([]); // 받아온 데이터의 태그 값 관리
 
   const handleInputChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value } = e.target;
     setMemoryValues((prev) => ({
       ...prev,
       [name]: value,
-      // [name]: type === "file" ? files[0] : value, // 파일 저장
-      // imageUrl: type === "file" ? files[0].name : prev.imageUrl, // 파일명 저장
     }));
   };
 
@@ -90,6 +88,7 @@ function MemoryUpdateModal({ postId, memory, onUpdate, onClose }) {
         post_tags: formatTagsForUpdate(tags),
         tags: tags,
         imageUrl: imageUrl,
+        isPublic: isPublic,
       };
       console.log(updatedData);
       //const response = await updateMemory(postId, updatedData);
