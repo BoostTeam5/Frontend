@@ -30,7 +30,7 @@ function Memory() {
   // 공개 비공개 그룹별 api에서 isPublic 속성에 따라서 데이터 분류하고 저장
   const [posts, setPosts] = useState([]);
   // 공개 비공개 필터링
-  const [isPublic, setIsPublic] = useState(false);
+  const [isPublic, setIsPublic] = useState(null);
   const [isPrivate, setIsPrivate] = useState(false); // 이거 필요없을듯 public으로 수정하기
 
   // 그룹 수정, 삭제
@@ -75,6 +75,12 @@ function Memory() {
   const handleKeywordChange = (event) => {
     setKeyword(event.target.value);
   };
+
+  // 공개 비공개 안 눌렀을 때 게시글 보여주기
+  const filteredPosts = posts.filter((post) => {
+    // isPublic이 null이면 전체 게시글 보여주기, 그렇지 않으면 해당 상태와 일치하는 게시글만 반환
+    return isPublic === null ? true : post.isPublic === isPublic;
+  });
 
   const updateLike = async () => {
     try {
@@ -335,8 +341,10 @@ function Memory() {
         </div>
 
         <div className="memory-list">
-          {posts.length > 0 ? (
-            posts.map((post, index) => (
+          {/* {posts.length > 0 ? (
+            posts.map((post, index) => ( */}
+          {filteredPosts.length > 0 ? (
+            filteredPosts.map((post, index) => (
               <div
                 key={index}
                 className="memory-item"
@@ -391,11 +399,6 @@ function Memory() {
           onDelete={deleteGroupAPI} // 삭제 요청 함수 전달
         />
       )}
-
-      {isPublic &&
-        {
-          /*공개인것만 보이게*/
-        }}
     </div>
   );
 }
