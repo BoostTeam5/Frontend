@@ -146,7 +146,7 @@
   margin-bottom: 20px;
   width: 100%;
 } */
-.memory-controls {
+.memory-controls-memory {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -169,7 +169,7 @@
 }
 
 /* 검색바 스타일 */
-.search-bar {
+.search-bar-detail {
   position: relative;
   width: 1186px;
   height: 45px;

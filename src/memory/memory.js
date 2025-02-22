@@ -308,7 +308,7 @@ function Memory() {
         </div>
 
         {/* 필터 & 검색 & 정렬 영역 */}
-        <div className="memory-controls">
+        <div className="memory-controls-memory">
           {/* 공개/비공개 필터 */}
           <div className="filter-buttons">
             <img
@@ -326,7 +326,7 @@ function Memory() {
           </div>
 
           {/* 검색창 */}
-          <div className="search-bar">
+          <div className="search-bar-detail">
             <img src={search} alt="검색 아이콘" className="searchBarIMG" />
             <input
               type="text"
