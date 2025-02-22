@@ -5,17 +5,15 @@ import SuccessModal from "../components/SuccessModal";
 import ErrorModal from "../components/ErrorModal";
 import toggleDefault from "../assets/toggle_default.png";
 import toggleActive from "../assets/toggle_active.png";
-
-// 수정: memoryApi에서 uploadImage 함수를 import
-import { uploadImage } from "../api/groupApi"; 
+import MemoryApi from "../apis/memoryAPI";
 import "../style/CreateGroup.css";
 import groupApi from "../api/groupApi";
 
 const CreateGroup = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [fileName, setFileName] = useState(""); // 파일명 표시용
-  const [imageUrl, setImageUrl] = useState(null); // 업로드된 이미지 URL
+  const [imageUrl, setImageUrl] = useState(null);
+  const [fileName, setFileName] = useState(""); // 파일명 표시용 state 추가
   const [introduction, setIntroduction] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -24,23 +22,21 @@ const CreateGroup = () => {
 
   const navigate = useNavigate();
 
+
   // 이미지 업로드 핸들러
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
+    // setIsUploading(true);
     try {
-      // 파일명 저장
       setFileName(file.name);
-
-      // memoryApi.js에서 export한 uploadImage 함수 사용
-      const uploadedImageUrl = await uploadImage(file);
-      setImageUrl(uploadedImageUrl);
-
-      console.log("업로드된 이미지 URL:", uploadedImageUrl);
+      
+      const response = await MemoryApi.uploadImage(file);
+      setImageUrl(response.imageUrl);
+      console.log("업로드된 이미지 URL:", response.imageUrl);
     } catch (error) {
       console.error("이미지 업로드 실패:", error);
-      setErrorMessage("이미지 업로드 중 오류가 발생했습니다.");
     }
   };
 
@@ -51,7 +47,7 @@ const CreateGroup = () => {
       const groupData = {
         name,
         password,
-        imageUrl,      // 서버에 업로드된 최종 이미지 URL
+        imageUrl,      // 업로드된 이미지 URL
         introduction,
         isPublic,
       };
@@ -92,15 +88,14 @@ const CreateGroup = () => {
           required
         />
 
-        {/* 대표 이미지 (파일명 표시 박스 + 파일 선택 버튼) */}
+        {/* 대표 이미지 업로드 */}
         <label className="create-group-label">대표 이미지</label>
         <div className="create-group-image-upload">
           {/* 파일명 표시 박스 */}
           <div className="file-display">
             {fileName ? fileName : "선택된 파일 없음"}
           </div>
-
-          {/* 숨겨진 파일 인풋 + 라벨(버튼) */}
+          {/* 숨겨진 파일 인풋과 파일 선택 버튼 */}
           <input
             type="file"
             id="fileInput"
@@ -124,7 +119,7 @@ const CreateGroup = () => {
           onChange={(e) => setIntroduction(e.target.value)}
         />
 
-        {/* 공개 여부 */}
+        {/* 공개 여부 토글 */}
         <label className="create-group-label">공개 여부</label>
         <div className="toggle-container">
           <span>{isPublic ? "공개" : "비공개"}</span>
@@ -151,7 +146,6 @@ const CreateGroup = () => {
         </button>
       </form>
 
-      {/* 성공 모달 */}
       {showSuccessModal && (
         <SuccessModal
           title="그룹 만들기 성공"
@@ -160,7 +154,6 @@ const CreateGroup = () => {
         />
       )}
 
-      {/* 에러 모달 */}
       {showErrorModal && (
         <ErrorModal
           title="그룹 만들기 실패"
