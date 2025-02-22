@@ -111,7 +111,7 @@ const GroupEditModal = ({ onClose, onSubmit, currentData }) => {
         </div>
         <label>수정 권한 인증</label>
         <input
-          type="text"
+          type="password"
           placeholder="그룹 비밀번호를 입력해주세요"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
