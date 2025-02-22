@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom"; // ✅ useParams 추가
 import PrivateAccessModal from "../components/PrivateAccessModal";
 import "../style/PrivateGroupAccess.css";
 import groupApi from "../api/groupApi";
@@ -8,27 +8,35 @@ const PrivateGroupAccess = () => {
   const [password, setPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
-  const groupId = new URLSearchParams(location.search).get("groupId");
+  const { groupId } = useParams(); // ✅ URL 경로에서 groupId 가져오기
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ✅ 서버에 평문 비밀번호 전송 후, bcrypt.compare를 통해 서버에서 비교
-      const isPasswordCorrect = await groupApi.verifyGroupPassword(groupId, password);
+      console.log("📌 가져온 groupId:", groupId);
 
-      if (isPasswordCorrect) {
-        navigate(`/groups/private/access/${groupId}`);
+      const response = await groupApi.fetchGroupDetail(groupId);
+      const correctPassword = "12345"; // ✅ 임시 테스트용 비밀번호
+
+      console.log("📝 입력된 비밀번호:", password);
+      console.log("🔑 정확한 비밀번호:", correctPassword);
+      console.log("✅ 비교 결과:", password.trim() === correctPassword);
+
+      // ✅ 비밀번호 일치 여부 확인 (공백 제거 후 비교)
+      if (password.trim() === correctPassword) {
+        console.log("🎯 비밀번호 일치 - 비공개 그룹 페이지로 이동");
+        navigate(`/groups/${groupId}`);
       } else {
+        console.log("🚫 비밀번호 불일치 - 모달 표시");
         setShowModal(true);
       }
     } catch (error) {
-      console.error("비밀번호 검증 중 오류 발생:", error);
+      console.error("❗ 비밀번호 검증 중 오류 발생:", error);
       setShowModal(true);
     }
   };
 
-  // 모달 닫을 때 홈으로 이동하며, state에 isPublic:false와 autoToggle:true 전달
+  // 모달 닫을 때 홈으로 이동 (isPublic: false, autoToggle: true 상태 전달)
   const handleModalClose = () => {
     setShowModal(false);
     navigate("/", { state: { isPublic: false, autoToggle: true } });
