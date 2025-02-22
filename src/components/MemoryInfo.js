@@ -4,52 +4,55 @@ import likeBtn from "../assets/likeBtn.png";
 import line from "../assets/line.png";
 import MemoryUpdateModal from "./MemoryUpdateModal";
 import DeleteModal from "./DeleteModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Button from "./Button";
 import contentImg from "../assets/contentImg.png";
-import CommentModal from "./CommentModal";
+import { likeMemory } from "../memoryApi";
+import dayjs from "dayjs";
 
-const MEMORY_DETAIL = {
-  id: 1,
-  groupId: 12,
-  nickname: "달봉이 아들",
-  title: "인천 앞바다에서 무려 60cm 월척을 낚다!",
-  content:
-    "인천 앞바다에서 월척을 낚았습니다!\n가족들과 기억에 오래도록 남을 멋진 하루였어요 가족들과 기억에 오래도록 남을 멋진 하루였어요. 가족들과 기억에 오래도록 남을 멋진 하루였어요.\n\n인천 앞바다에서 월척을 낚았습니다!\n가족들과 기억에 오래도록 남을 멋진 하루였어요.\n\n인천 앞바다에서 월척을 낚았습니다!",
-  imageUrl: "",
-  tags: ["인천", "낚시"],
-  location: "인천 앞바다",
-  moment: "2024-02-19",
-  likeCount: 120,
-  commentCount: 8,
-  isPublic: true,
-  createdAt: "",
+const formatDate = (date) => {
+  return dayjs(date).format("YYYY-MM-DD");
 };
 
-function MemoryInfo({ onEdit, onDelete }) {
+function MemoryInfo({ postId, memory, commentCount, onUpdate, onDelete }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [memoryData, setMemoryData] = useState(memory);
 
-  const [memory, setMemory] = useState(MEMORY_DETAIL);
+  const [tags, setTags] = useState([]);
 
-  const handleDelete = () => {
-    setIsDeleteOpen(true);
-    onDelete(memory.id);
+  useEffect(() => {
+    if (memoryData?.post_tags?.length) {
+      const extractedTags = memoryData.post_tags.map(
+        (pt) => pt.tags?.tagName || ""
+      );
+      if (tags.length === 0) {
+        setTags(extractedTags);
+      }
+    }
+  }, [memoryData]);
+
+  const handleUpdate = async (updatedData) => {
+    const response = await onUpdate(updatedData);
+    setMemoryData(response); // response가 undefined임
+    setTags(response.tags);
+    setIsEditOpen(false); // API 요청이 성공한 후 모달 닫기
   };
 
-  const handleEdit = () => {
-    setIsEditOpen(true);
-    onEdit(memory.id);
+  const handleDelete = async (postPassword) => {
+    await onDelete(postPassword);
+    setIsDeleteOpen(false);
   };
 
-  const handleCreateComment = () => {
-    setIsCreateOpen(true);
-  };
-
-  const handleLikeClick = () => {
-    console.log("현재 공감수:", memory.likeCount + 1);
+  // 공감 보내기
+  const handleLike = async () => {
+    try {
+      await likeMemory(postId);
+      alert("공감 보내기 성공!");
+    } catch (e) {
+      console.error("공감 보내기 실패", e);
+    }
   };
 
   return (
@@ -66,20 +69,28 @@ function MemoryInfo({ onEdit, onDelete }) {
           <div style={{ display: "flex", gap: "20px" }}>
             <span>{memory.nickname}</span>
             <span>|</span>
-            <span>{memory.isPublic ? "공개" : "비공개"}</span>
+            <span style={{ color: "#8d8d8d" }}>
+              {memory.isPublic ? "공개" : "비공개"}
+            </span>
           </div>
-          <div>
-            <TextButton onClick={handleEdit} style={{ color: "#282828" }}>
+          <div style={{ display: "flex", gap: "40px" }}>
+            <TextButton
+              onClick={() => setIsEditOpen(true)}
+              style={{ color: "#282828" }}
+            >
               추억 수정하기
             </TextButton>
-            <TextButton onClick={handleDelete} style={{ color: "#787878" }}>
+            <TextButton
+              onClick={() => setIsDeleteOpen(true)}
+              style={{ color: "#8d8d8d" }}
+            >
               추억 삭제하기
             </TextButton>
           </div>
         </div>
         <h2>{memory.title}</h2>
-        <div style={{ display: "flex", gap: "10px" }}>
-          {memory.tags.map((tag, idx) => (
+        <div style={{ display: "flex", gap: "10px", color: "#b8b8b8" }}>
+          {tags.map((tag, idx) => (
             <span key={idx}>#{tag}</span>
           ))}
         </div>
@@ -94,46 +105,53 @@ function MemoryInfo({ onEdit, onDelete }) {
             style={{
               display: "flex",
               gap: "20px",
+              alignItems: "center",
               marginTop: "50px",
               marginBottom: "10px",
             }}
           >
             <span>{memory.location}</span>
-            <span>{memory.moment} 18:00</span>
-            <span>
-              <img src={flowerImg} alt="공감수" /> {memory.likeCount}
-            </span>
-            <span>
-              <img src={replyCountImg} alt="댓글수" /> {memory.commentCount}
-            </span>
+            <span>{formatDate(memory.moment)}</span>
+
+            <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
+              <img src={flowerImg} alt="공감수" style={{ width: "25px" }} />{" "}
+              <span style={{ color: "#8d8d8d" }}>{memory.likeCount}</span>
+            </div>
+            <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
+              <img src={replyCountImg} alt="댓글수" style={{ width: "25px" }} />
+              <span style={{ color: "#8d8d8d" }}>{commentCount}</span>
+            </div>
           </div>
           <img
             src={likeBtn}
             alt="공감 보내기 버튼"
-            onClick={handleLikeClick}
-            style={{ cursor: "pointer" }}
+            onClick={handleLike}
+            style={{ width: "180px", cursor: "pointer" }}
           />
         </div>
         <img src={line} alt="구분선" />
       </div>
 
       <Content>
-        <img src={contentImg} alt="본문 첨부사진" />
+        <img src={memory.imageUrl} alt="본문 첨부사진" />
         <p>{memory.content}</p>
       </Content>
 
-      <Button onClick={handleCreateComment}>댓글 등록하기</Button>
-
       {isEditOpen && (
         <MemoryUpdateModal
+          postId={postId}
+          memory={memory}
+          onUpdate={handleUpdate}
           onClose={() => setIsEditOpen(false)}
-          initialValues={memory}
         />
       )}
       {isDeleteOpen && (
-        <DeleteModal title="추억" onClose={() => setIsDeleteOpen(false)} />
+        <DeleteModal
+          title="추억"
+          onDelete={handleDelete}
+          onClose={() => setIsDeleteOpen(false)}
+        />
       )}
-      {isCreateOpen && <CommentModal onClose={() => setIsCreateOpen(false)} />}
     </div>
   );
 }

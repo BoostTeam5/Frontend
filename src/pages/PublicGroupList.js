@@ -15,18 +15,24 @@ import { useNavigate } from "react-router-dom";
 import groupApi from "../api/groupApi";
 
 const PublicGroupList = () => {
-  const [groups, setGroups] = useState([]); // 전체 그룹 데이터
+  const [groups, setGroups] = useState([]);
   const [keyword, setKeyword] = useState("");
-  const [sortBy, setSortBy] = useState("likes"); // 기본: 공감순
-  const [displayCount, setDisplayCount] = useState(12); // 처음 12개 보여줌
+  const [sortBy, setSortBy] = useState("likes"); // 공감순 디폴트
+  const [displayCount, setDisplayCount] = useState(12);
   const [loading, setLoading] = useState(false);
-  const [isPublic, setIsPublic] = useState(true); // 공개 그룹만 보여줌
+  const [isPublic, setIsPublic] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const getGroups = async () => {
       try {
-        const response = await groupApi.fetchGroups(1, 100, sortBy, keyword, isPublic);
+        const response = await groupApi.fetchGroups(
+          1,
+          100,
+          sortBy,
+          keyword,
+          isPublic
+        );
         console.log("전체 불러온 그룹 수:", response.data.length);
         setGroups(response.data);
       } catch (error) {
@@ -126,6 +132,7 @@ const PublicGroupList = () => {
           <div className="private-group-list">
             {sortedGroups.slice(0, displayCount).map((group) => (
               <div key={group.id} style={{ cursor: "pointer" }}>
+                {/* <div key={group.groupId} style={{ cursor: "pointer" }}> */}
                 {isPublic ? (
                   <PublicGroupCard
                     group={group}

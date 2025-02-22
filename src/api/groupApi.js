@@ -41,10 +41,11 @@ export const fetchGroupDetail = async (groupId) => {
 
 // 그룹 비밀번호 확인 API (POST)
 export const verifyGroupPassword = async (groupId, password) => {
-  const response = await api.post(`/${groupId}/verify-password`, { password });
+  const response = await api.post(`/api/groups/${groupId}/verify-password`, {
+    password,
+  });
   return response.data;
 };
-
 
 const groupApi = {
   buildGroup,

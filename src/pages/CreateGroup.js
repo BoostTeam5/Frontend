@@ -22,8 +22,25 @@ const CreateGroup = () => {
 
   const navigate = useNavigate();
 
-
   // 이미지 업로드 핸들러
+
+  // 이미지 업로드 핸들러 (파일 검증)
+  // const handleImageUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   const allowedTypes = ["image/jpeg", "image/png"];
+  //   const maxSize = 5 * 1024 * 1024;
+  //   if (!file) return;
+  //   if (!allowedTypes.includes(file.type)) {
+  //     setErrorMessage("JPEG 또는 PNG 형식의 파일만 업로드 가능합니다.");
+  //     return;
+  //   }
+  //   if (file.size > maxSize) {
+  //     setErrorMessage("파일 크기는 5MB 이하여야 합니다.");
+  //     return;
+  //   }
+  //   setGroupImage(file);
+  //   setErrorMessage("");
+  // };
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -31,7 +48,6 @@ const CreateGroup = () => {
     // setIsUploading(true);
     try {
       setFileName(file.name);
-      
       const response = await MemoryApi.uploadImage(file);
       setImageUrl(response.imageUrl);
       console.log("업로드된 이미지 URL:", response.imageUrl);
@@ -44,10 +60,14 @@ const CreateGroup = () => {
   const handleCreateGroup = async (e) => {
     e.preventDefault();
     try {
+      // (예시) 이미지 업로드 API가 있다면 여기서 별도 업로드 후 URL 받기
+      // 여기서는 간단하게 브라우저에서 미리보기용 URL 생성
+      //const imageUrl = imageUrl ? URL.createObjectURL(imageUrl) : null;
+
       const groupData = {
         name,
         password,
-        imageUrl,      // 업로드된 이미지 URL
+        imageUrl,
         introduction,
         isPublic,
       };
@@ -119,6 +139,17 @@ const CreateGroup = () => {
           onChange={(e) => setIntroduction(e.target.value)}
         />
 
+        <label className="create-group-label">비밀번호</label>
+        <input
+          type="password"
+          className="create-group-input"
+          placeholder="그룹 비밀번호를 입력해 주세요"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+
+        />
+
         {/* 공개 여부 토글 */}
         <label className="create-group-label">공개 여부</label>
         <div className="toggle-container">
@@ -129,8 +160,8 @@ const CreateGroup = () => {
             onClick={() => setIsPublic(!isPublic)}
           />
         </div>
-
-        {/* 비밀번호 */}
+{/* 
+        
         <label className="create-group-label">비밀번호</label>
         <input
           type="password"
@@ -141,7 +172,9 @@ const CreateGroup = () => {
           required
         />
 
-        <button type="submit" className="create-group-submit-button">
+        <button type="submit" className="create-group-submit-button"> */}
+
+        <button type="submit" onClick={handleCreateGroup}>
           그룹 만들기
         </button>
       </form>
