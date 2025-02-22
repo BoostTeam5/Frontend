@@ -1,42 +1,46 @@
+/* 전체 컨테이너: 그룹 상세 페이지 */
 .groupDetail-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 80%;
+  width: 100%;
+  padding-top: 20px;
   margin: 0 auto;
 }
 
+/* 상단 그룹 정보 영역 */
 .clickedGroupInfo {
   display: flex;
-  justify-content: space-between; /* 이미지, 텍스트, 버튼을 양쪽으로 정렬 */
-  align-items: flex-start;
-  width: 80%;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 1560px;
+  margin: 0 auto;
   padding: 20px;
 }
 
+/* 그룹 이미지 영역 */
 .groupImageDesign img {
   width: 300px;
   height: auto;
   border-radius: 10px;
   object-fit: cover;
-  margin: 10px;
+  margin-right: 20px;
 }
 
+/* 그룹 텍스트 정보 */
 .groupInfo-text {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   justify-content: center;
-  flex: 1;
 }
 
+/* 작은 정보 (예: D+일수, 공개/비공개) */
 .info1 {
   font-size: 14px;
   color: gray;
   margin-bottom: 5px;
 }
 
+/* 큰 정보 (그룹명, 추억 수, 공감 수) */
 .info2 {
   font-size: 18px;
   font-weight: bold;
@@ -45,6 +49,7 @@
   gap: 10px;
 }
 
+/* 그룹 소개 */
 .groupIntro {
   font-size: 16px;
   color: #333;
@@ -52,13 +57,14 @@
   margin-bottom: 10px;
 }
 
-/* 획득 배지 */
+/* 획득 배지 영역 */
 .badge-container {
   display: flex;
   gap: 10px;
   margin-top: 10px;
 }
 
+/* 배지 스타일 */
 .badge {
   background: #f5f5f5;
   padding: 8px 12px;
@@ -68,14 +74,14 @@
   color: #333;
 }
 
-/* 오른쪽 버튼 컨테이너 */
+/* 오른쪽 버튼 컨테이너 (수정/삭제, 좋아요) */
 .button-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   gap: 10px;
 }
 
+/* 수정/삭제 버튼 스타일 */
 .text-button {
   border: none;
   background: none;
@@ -83,12 +89,12 @@
   font-size: 16px;
   color: #666;
 }
-
 .text-button:hover {
   text-decoration: underline;
 }
 
-.like-button img {
+/* 좋아요 버튼 이미지 */
+.like-button-container img {
   width: 200px;
   height: 50px;
 }
@@ -99,28 +105,21 @@
   margin-top: 20px;
 }
 
-.filter-tab {
-  display: flex;
-  flex-direction: row;
-}
-
-.enterWord {
-  background-color: #f4f4f4;
-}
-
+/* 메모리(게시글) 컨테이너 */
 .memory-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+  width: 90%;
+  max-width: 1560px;
+  margin: 20px auto;
   padding: 20px;
 }
 
+/* 메모리 헤더 (제목 및 추억 만들기 버튼) */
 .memory-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 80%;
+  margin-left: 50%;
   max-width: 1000px;
   margin-bottom: 10px;
 }
@@ -128,126 +127,78 @@
 .memory-title {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 15px;
+}
+.add-memory-btn {
+  width: 200px;
+  height: 45px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-/* .memory-filter-container {
+/* 메모리 컨트롤 영역 (공개/비공개 필터, 검색, 정렬) */
+/* .memory-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
-  max-width: 1000px;
   margin-bottom: 20px;
+  width: 100%;
 } */
-.memory-filter-container {
+.memory-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 80%; /* 메모리 헤더와 동일한 80%로 설정 */
-  max-width: 1200px;
+  width: 80%;
+  min-width: 700px;
   margin-bottom: 20px;
+  margin-left: -200px;
 }
 
-/* 필터 버튼 컨테이너 */
+/* 필터 버튼 그룹 */
 .filter-buttons {
   display: flex;
-  gap: 10px; /* 버튼 사이 간격 */
+  gap: 10px;
 }
-
-/* 필터 버튼 기본 스타일 */
-.filter-btn {
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  padding: 8px 16px;
-  border-radius: 20px; /* pill 형태 */
-  font-size: 14px;
-  cursor: pointer;
-  color: #333;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-}
-
-/* 마우스 오버 */
-.filter-btn:hover {
-  background-color: #eee;
-}
-
-/* 활성 상태(공개/비공개/전체 보기 중 선택된 버튼) */
-.filter-btn.active {
-  background-color: black;
-  color: white;
-  border-color: black;
-}
-
-.filter-buttons img {
+.filter-buttons .public-btn,
+.filter-buttons .private-btn {
   width: 75px;
   height: 50px;
   cursor: pointer;
-  margin-right: 10px;
 }
 
+/* 검색바 스타일 */
 .search-bar {
-  display: flex;
-  align-items: center;
+  position: relative;
+  width: 1186px;
+  height: 45px;
   background: #f4f4f4;
+  border-radius: 6px;
   padding: 5px 10px;
-  border-radius: 20px;
-  width: 600px;
 }
-
-.search-bar img {
+.searchBarIMG {
   width: 20px;
   height: 20px;
   margin-right: 8px;
 }
-
 .search-bar input {
   border: none;
-  background: none;
-  width: 100%;
+  background: transparent;
+  width: calc(100% - 60px);
+  height: 23px;
+  outline: none;
+  font-size: 14px;
+  color: #b8b8b8;
+  margin-left: 30px;
+  margin-top: 9px;
 }
 
-.add-memory-btn {
-  width: 200px;
-  background: black;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 15px;
-  font-size: 16px;
-}
-
-.memory-list {
-  display: grid;
-  grid-template-columns: repeat(
-    auto-fill,
-    minmax(375px, 1fr)
-  ); /* 카드 가로 크기 375px */
-  gap: 20px; /* 카드 간격 */
-  justify-content: center;
-  align-items: start;
-  width: 90%;
-  max-width: 1200px;
-  margin: 20px auto;
-}
-
-.load-more-btn {
-  border: 1px solid #282828;
-  margin-top: 20px;
-  padding: 10px 20px;
-  border: none;
-  background: #fafafa;
-  color: black;
-  border-radius: 10px black;
-  cursor: pointer;
-}
-
+/* 정렬 드롭다운 */
 .dropdown {
   position: relative;
   display: inline-block;
 }
-
 .dropdown-btn {
   background: #fafafa;
   color: #282828;
@@ -258,7 +209,6 @@
   width: 160px;
   height: 45px;
 }
-
 .dropdown-menu {
   position: absolute;
   top: 100%;
@@ -270,46 +220,102 @@
   list-style: none;
   width: 160px;
   border-radius: 6px;
+  z-index: 99;
 }
-
 .dropdown-menu li {
   padding: 8px;
   cursor: pointer;
 }
-
 .dropdown-menu li:hover {
   background: #f0f0f0;
 }
 
+/* 메모리 리스트 (게시글 카드) */
+.memory-list {
+  display: grid;
+  grid-template-columns: repeat(4, 375px);
+  gap: 20px;
+  justify-content: center;
+  width: calc(375px * 4 + 20px * 3);
+  margin: 40px auto 0 auto;
+  padding: 0 180px;
+}
+
+/* 단일 게시글 카드 */
 .memory-item {
   background: white;
-  border: 1px solid #ddd;
   border-radius: 10px;
   padding: 20px;
-  width: 100%;
-  height: auto; /* 높이를 자동으로 조정 */
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
-  cursor: pointer;
 }
 
-/* 이미지 컨테이너 */
+/* 게시글 내용 */
+.memory-content {
+  width: 100%;
+}
+.memory-meta {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 5px;
+}
+.memory-item .memory-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+/* 게시글 이미지 컨테이너 */
 .memory-image-container {
   width: 100%;
-  height: 200px; /* 고정 높이 설정 */
+  height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   border-radius: 10px;
+  margin-bottom: 10px;
 }
-
-/* 메모리 이미지 스타일 */
 .memory-img-home {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* 비율을 유지하면서 꽉 채우기 */
+  object-fit: cover;
   border-radius: 10px;
+}
+
+/* 게시글 통계 (공감, 댓글 수) */
+.memory-stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* 게시글이 없을 때 */
+.NoImage-groupDetail {
+  display: block;
+  margin: 40px auto;
+}
+
+/* 하단 더보기 버튼 영역 */
+.memory-footer {
+  display: flex;
+  justify-content: center;
+  margin: 60px auto 0 auto;
+  width: 100%;
+}
+.load-more-btn {
+  width: 1560px;
+  height: 60px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: #ffffff;
+  cursor: pointer;
+  font-family: "Spoqa Han Sans Neo";
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: center;
 }

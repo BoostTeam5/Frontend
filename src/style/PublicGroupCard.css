@@ -1,0 +1,166 @@
+/* ✅ 전체 요소에 box-sizing 설정 */
+* {
+    box-sizing: border-box;
+}
+
+/* ✅ 공개 카드 크기 및 레이아웃 설정 */
+.public-card {
+    width: 375px !important;
+    height: 561px !important; /* ✅ 이미지와 추가된 내용 포함 크기 확장 */
+    padding: 20px;
+    border: 1px solid #bdb9b9;
+    border-radius: 12px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+    overflow: hidden;
+}
+
+/* ✅ 콘텐츠 이미지 추가 */
+.content-image {
+    width: 335px;
+    height: 335px;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+/* ✅ 카드 콘텐츠 영역 */
+.card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+}
+
+/* ✅ D+디데이 및 공개 표시 (비공개와 동일) */
+.group-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17.53px;
+    letter-spacing: -3%;
+    margin-top: 20px;
+}
+
+.d-day {
+    color: #282828;
+}
+
+.separator {
+    color: #8D8D8D;
+}
+
+.public-label {
+    color: #8D8D8D;
+}
+
+/* ✅ 그룹 제목 (20px 아래 위치) */
+.group-title {
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20.03px;
+    letter-spacing: -3%;
+    color: #282828;
+    margin-top: 20px;
+}
+
+/* ✅ 그룹 설명 (20px 아래 위치) */
+.group-description {
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20.03px;
+    letter-spacing: -3%;
+    color: #282828;
+    margin-top: 0px;
+}
+
+/* ✅ 획득 배지, 추억, 그룹 공감 텍스트 (40px 간격) */
+.group-labels {
+    display: flex;
+    justify-content: flex-start;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.label-text {
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15.02px;
+    letter-spacing: -3%;
+    color: #B8B8B8;
+}
+
+/* ✅ 획득 배지, 추억, 그룹 공감 숫자 고정 위치 */
+.group-stats {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 20px;
+  }
+  
+  .badge-value {
+    position: absolute;
+    left: 0px;            /* ✅ 획득 배지: 카드 왼쪽 기준 20px 고정 */
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17.53px;
+    color: #282828;
+    margin-top: 5px;
+  }
+  
+  .post-value {
+    position: absolute;
+    left: 86px;           /* ✅ 추억: 카드 왼쪽 기준 106px 고정 */
+    font-family: "Spoqa Han Sans Neo";
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 17.53px;
+    color: #282828;
+    margin-top: 5px;
+  }
+  
+  .like-container-public {
+    position: absolute;
+    left: 148px;           /* ✅ 그룹 공감 (꽃 아이콘 + 숫자): 카드 왼쪽 기준 168px 고정 */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 2px;
+  }
+  
+  .flower-icon {
+    width: 17.19px;
+    height: 16.48px;
+  }
+
+  /* ✅ 공개 그룹 없음 - 이미지 영역 */
+.no-group-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 200px; /* ✅ 검색창 기준 200px 아래 */
+  }
+  
+  .no-group-image {
+    width: 208px; /* ✅ 이미지 크기 조정 (필요 시 변경 가능) */
+    height: auto;
+  }
+  
+  .add-group-icon {
+    margin-top: 180px; /* ✅ no_group_alert 이미지 기준 180px 아래 */
+    width: 400px;
+    height: 50px;
+    cursor: pointer;
+  }
+  

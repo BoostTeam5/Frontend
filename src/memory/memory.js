@@ -6,11 +6,10 @@ import defaultImg from "../assets/family.png";
 import line from "../assets/line.png";
 import likeBtn from "../assets/likeBtn.png";
 import addMemory from "../assets/addMemory.png";
-//import public_active from "../assets/public_active.png";
-import public_active from "../assets/private_active.png";
-import public_default from "../assets/public_default.png";
-import private_active from "../assets/private_active.png";
-import private_default from "../assets/private_default.png";
+import publicActiveIcon from "../assets/public_active.png";
+import privateActiveIcon from "../assets/private_active.png";
+import publicDefaultIcon from "../assets/public_default.png";
+import privateDefaultIcon from "../assets/private_default.png";
 import noMemory from "../assets/no_memory_alert.png";
 import search from "../assets/search.png";
 import comment from "../assets/comment-count.png";
@@ -31,7 +30,7 @@ function Memory() {
   // 공개 비공개 그룹별 api에서 isPublic 속성에 따라서 데이터 분류하고 저장
   const [posts, setPosts] = useState([]);
   // 공개 비공개 필터링
-  const [isPublic, setIsPublic] = useState(null);
+  const [isPublic, setIsPublic] = useState(true);
   const [isPrivate, setIsPrivate] = useState(false); // 이거 필요없을듯 public으로 수정하기
 
   // 그룹 수정, 삭제
@@ -40,6 +39,7 @@ function Memory() {
 
   // 추억 만들기 버튼
   const [isMakeMemoryOpen, setIsMakeMemoryOpen] = useState(false);
+  const [badges, setBadges] = useState([]);
   const [hasMore, setHasMore] = useState(false); // 더 불러올 게시글이 있는지 여부
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const toggleDropdown = () => {
@@ -59,19 +59,6 @@ function Memory() {
   const loadMoreData = () => {
     console.log("더보기");
   };
-  // 공개 비공개 버튼 클릭 핸들러
-  const handleToPublicActive = () => {
-    setIsPublic(true);
-  };
-  const handleToPublicDefault = () => {
-    setIsPublic(false);
-  };
-  const handleToPrivateActive = () => {
-    setIsPrivate(true);
-  };
-  const handleToPrivateDefault = () => {
-    setIsPrivate(false);
-  };
 
   const handleFilterChange = (value) => {
     setIsPublic(value); // ✅ isPublic 값 변경하여 API 다시 호출
@@ -88,7 +75,7 @@ function Memory() {
   const handleSortOptionClick = (option) => {
     setSortBy(option.value);
     setDropdownOpen(false);
-    setPage(1); // 정렬 기준이 바뀌면 페이지 초기화
+    setPage(1);
   };
 
   // 태그 혹은 제목으로 검색하기
@@ -118,6 +105,8 @@ function Memory() {
     try {
       const data = await MemoryApi.readGroupInfo(groupId);
       setGroup(data);
+      setBadges(data.badges);
+      //console.log(data.badges[0].name);
       console.log("✅ 최신 그룹 정보:", data);
     } catch (error) {
       console.error("❌ 그룹 정보 불러오기 실패:", error);
@@ -137,6 +126,12 @@ function Memory() {
     setIsEditModalOpen(false);
   };
 
+  // 필터나 정렬, 검색어 등 변화 시 페이지와 게시글 초기화
+  useEffect(() => {
+    setPage(1);
+    setPosts([]);
+  }, [groupId, sortBy, keyword, isPublic]);
+
   //useEffect로 그룹의 게시글 가져오기 */
   useEffect(() => {
     const fetchPosts = async () => {
@@ -153,7 +148,6 @@ function Memory() {
         // const uniquePosts = Array.from(
         //   new Set(response.data.map((post) => post.id))
         // ).map((id) => response.data.find((post) => post.id === id));
-
         //setPosts(uniquePosts);
         if (page === 1) {
           setPosts(response.data);
@@ -174,34 +168,6 @@ function Memory() {
     }
   }, [groupId, page, pageSize, sortBy, keyword, isPublic]); // ✅ 값이 바뀌면 자동으로 실행
 
-  // useEffect(() => {
-  //   const fetchPosts = async () => {
-  //     try {
-  //       const response = await MemoryApi.readPosts(
-  //         groupId,
-  //         page,
-  //         pageSize,
-  //         sortBy,
-  //         keyword,
-  //         isPublic
-  //       );
-  //       console.log("서버 응답 데이터:", response.data);
-  //       const uniquePosts = Array.from(
-  //         new Set(response.data.map((post) => post.id))
-  //       ).map((id) => response.data.find((post) => post.id === id));
-
-  //       setPosts(uniquePosts);
-  //       console.log(posts.length);
-  //     } catch (error) {
-  //       console.error("Failed to fetch posts:", error);
-  //     }
-  //   };
-
-  //   if (groupId) {
-  //     fetchPosts();
-  //   }
-  // }, [groupId, page, pageSize, sortBy, keyword, isPublic]);
-
   // 그룹 삭제 API
   const deleteGroupAPI = async (password) => {
     try {
@@ -216,7 +182,7 @@ function Memory() {
       }
     } catch (error) {
       console.error("그룹 삭제 중 오류 발생:", error);
-      alert("그룹 삭제 중 문제가 발생했습니다.");
+      alert("비밀번호를 다시 입력해주세요");
     }
   };
 
@@ -259,8 +225,16 @@ function Memory() {
         {/* 중앙: 그룹 정보 */}
         <div className="groupInfo-text">
           <div className="info1">
-            <span>{"D+265      "}</span>
-            <span>{group.isPublic ? "공개" : "비공개"}</span>
+            <div className="info1">
+              <span>
+                D+
+                {Math.floor(
+                  (new Date() - new Date(group.createdAt)) /
+                    (1000 * 60 * 60 * 24)
+                )}{" "}
+              </span>
+              <span>{group.isPublic ? "공개" : "비공개"}</span>
+            </div>
           </div>
 
           <div className="info2">
@@ -275,11 +249,12 @@ function Memory() {
               "서로 한 마음으로 응원하고 아끼는 달봉이네 가족입니다."}
           </div>
 
-          {/* 획득 배지 */}
           <div className="badge-container">
-            <span className="badge">🏅 7일 연속 게시글 등록</span>
-            <span className="badge">🏆 그룹 공감 1만 개 이상 받기</span>
-            <span className="badge">💖 추억 공감 1만 개 이상 받기</span>
+            {badges.map((badge) => (
+              <span key={badge.id} className="badge">
+                {badge.name}
+              </span>
+            ))}
           </div>
         </div>
 
@@ -321,9 +296,9 @@ function Memory() {
       </div>
 
       <div className="memory-container">
-        {/* 제목 */}
+        {/* 상단 헤더 영역 */}
         <div className="memory-header">
-          <h2 className="memory-title">추억 목록</h2>
+          <h1 className="memory-title">추억 목록</h1>
           <button
             className="add-memory-btn"
             onClick={() => navigate(`/newMemory/${groupId}`)}
@@ -332,52 +307,35 @@ function Memory() {
           </button>
         </div>
 
-        {/* 필터 + 검색 */}
-        <div className="memory-filter-container">
-          {/* <div className="filter-buttons">
-            <img
-              src={isPublic ? public_active : public_default}
-              onClick={isPublic ? handleToPublicDefault : handleToPublicActive}
-              alt="공개"
-            />
-            <img
-              src={isPrivate ? private_active : private_default}
-              onClick={
-                isPrivate ? handleToPrivateDefault : handleToPrivateActive
-              }
-              alt="비공개"
-            />
-          </div> */}
+        {/* 필터 & 검색 & 정렬 영역 */}
+        <div className="memory-controls">
+          {/* 공개/비공개 필터 */}
           <div className="filter-buttons">
-            <button
-              className={`filter-btn ${isPublic === true ? "active" : ""}`}
+            <img
+              src={isPublic === true ? publicActiveIcon : publicDefaultIcon}
+              alt="공개 버튼"
+              className="public-btn"
               onClick={() => handleFilterChange(true)}
-            >
-              공개만 보기
-            </button>
-            <button
-              className={`filter-btn ${isPublic === false ? "active" : ""}`}
+            />
+            <img
+              src={isPublic === false ? privateActiveIcon : privateDefaultIcon}
+              alt="비공개 버튼"
+              className="private-btn"
               onClick={() => handleFilterChange(false)}
-            >
-              비공개만 보기
-            </button>
-            <button
-              className={`filter-btn ${isPublic === null ? "active" : ""}`}
-              onClick={() => handleFilterChange(null)}
-            >
-              전체 보기
-            </button>
+            />
           </div>
 
+          {/* 검색창 */}
           <div className="search-bar">
-            <img src={search} alt="검색 아이콘" />
+            <img src={search} alt="검색 아이콘" className="searchBarIMG" />
             <input
               type="text"
               placeholder="태그 혹은 제목을 입력해주세요"
-              onChange={handleKeywordChange} // 키보드에서 입력한 값을 쳤을때 이벤트 처리
+              onChange={handleKeywordChange}
             />
           </div>
 
+          {/* 정렬 드롭다운 */}
           <div className="dropdown">
             <button className="dropdown-btn" onClick={toggleDropdown}>
               {sortOptions.find((opt) => opt.value === sortBy)?.label || sortBy}
@@ -395,9 +353,8 @@ function Memory() {
           </div>
         </div>
 
+        {/* 추억 리스트 영역 */}
         <div className="memory-list">
-          {/* {posts.length > 0 ? (
-            posts.map((post, index) => ( */}
           {filteredPosts.length > 0 ? (
             filteredPosts.map((post, index) => (
               <div
@@ -414,30 +371,42 @@ function Memory() {
                     {post.nickname} | {post.isPublic ? "공개" : "비공개"}
                   </div>
                   <div className="memory-title">{post.title}</div>
-                  <div className="memory-image-container">
-                    <img
-                      src={post.imageUrl || defaultImg} // 기본 이미지 설정
-                      alt="Memory"
-                      className="memory-img-home"
-                    />
-                  </div>{" "}
+                  {post.isPublic && (
+                    <div className="memory-image-container">
+                      <img
+                        src={post.imageUrl || defaultImg}
+                        alt="Memory"
+                        className="memory-img-home"
+                      />
+                    </div>
+                  )}
                   <div className="memory-stats">
-                    <img src={likeCountImg} alt="likes" />{" "}
+                    <img src={likeCountImg} alt="likes" />
                     <span>{post.likeCount}</span>
-                    <img src={comment} alt="No Image" />{" "}
+                    <img src={comment} alt="No Image" />
                     <span>{post.commentCount}</span>
                   </div>
                 </div>
               </div>
             ))
           ) : (
-            <img src={noMemory} />
+            <img
+              src={noMemory}
+              className="NoImage-groupDetail"
+              alt="등록된 추억 없음"
+            />
           )}
         </div>
 
-        <button onClick={() => setPage((prevPage) => prevPage + 1)}>
-          더보기
-        </button>
+        {/* 하단 더보기 버튼 */}
+        <div className="memory-footer">
+          <button
+            className="load-more-btn"
+            onClick={() => setPage((prevPage) => prevPage + 1)}
+          >
+            더보기
+          </button>
+        </div>
       </div>
 
       {isEditModalOpen && (
