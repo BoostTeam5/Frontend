@@ -33,7 +33,7 @@ const PrivateGroupList = ({ group }) => {
     };
     getGroups();
   }, []);
-
+  
   const filteredGroups = groups.filter((group) =>
     group.name.toLowerCase().includes(searchQuery.toLowerCase())
   );

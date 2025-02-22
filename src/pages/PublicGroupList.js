@@ -26,24 +26,19 @@ const PublicGroupList = () => {
   useEffect(() => {
     const getGroups = async () => {
       try {
-        const response = await groupApi.fetchGroups(
-          // page,
-          // pageSize,
-          sortBy,
-          keyword,
-          isPublic
+        const response = await groupApi.fetchGroups(sortBy, keyword, isPublic);
+        // API에서 불러온 그룹 중 isPublic 값에 맞게 필터링 (필요시)
+        const filtered = response.data.filter(
+          (group) => group.isPublic === isPublic
         );
-        // API에서 불러온 그룹 중 공개(isPublic === true) 그룹만 사용
-        console.log(response.data);
-        //const publicGroups = data.filter((group) => group.isPublic);
-        setGroups(response.data);
+        setGroups(filtered);
       } catch (error) {
         console.error("그룹 데이터 불러오기 실패:", error);
       }
     };
     getGroups();
   }, [isPublic, sortBy, keyword]);
-
+  
   const filteredGroups = groups.filter((group) =>
     group.name.toLowerCase().includes(keyword.toLowerCase())
   );

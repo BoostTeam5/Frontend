@@ -2,30 +2,36 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import PrivateAccessModal from "../components/PrivateAccessModal";
 import "../style/PrivateGroupAccess.css";
-import privateAccessImg from "../assets/privateAccess.png";
+import groupApi from "../api/groupApi";
 
 const PrivateGroupAccess = () => {
-    const [password, setPassword] = useState("");
-    const [showModal, setShowModal] = useState(false);
-    const navigate = useNavigate();
-    const location = useLocation(); // ✅ 현재 위치 정보 가져오기
-    const groupId = new URLSearchParams(location.search).get("groupId"); // ✅ groupId 추출
+  const [password, setPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const groupId = new URLSearchParams(location.search).get("groupId");
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const correctPassword = "1234"; // ✅ 실제 구현 시 서버 검증 필요
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await groupApi.getGroupDetail(groupId);
+      const correctPassword = response.data.groupPassword;
+      if (password === correctPassword) {
+        navigate(`/api/groups/${groupId}`);
+      } else {
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.error("그룹 정보를 가져오는 중 오류 발생:", error);
+      setShowModal(true);
+    }
+  };
 
-        if (password === correctPassword) {
-          navigate("/"); // ✅ 비밀번호 일치 시 메인 페이지로 이동
-        } else {
-          setShowModal(true); // ✅ 불일치 시 모달 표시
-        }
-      };
-
-      const handleModalClose = () => {
-        setShowModal(false);
-        navigate(`/privateAccess?groupId=${groupId}`); // ✅ 다시 비밀번호 입력 페이지로
-      };
+  // 모달 닫을 때 홈으로 이동하며, state에 isPublic:false와 autoToggle:true 전달
+  const handleModalClose = () => {
+    setShowModal(false);
+    navigate("/", { state: { isPublic: false, autoToggle: true } });
+  };
 
   return (
     <div className="private-access-container">
@@ -44,16 +50,16 @@ const PrivateGroupAccess = () => {
           required
         />
         <button type="submit" className="private-access-submit-button">
-            제출하기
+          제출하기
         </button>
       </form>
 
-      {/* ✅ 비밀번호 불일치 시 모달 */}
       <PrivateAccessModal
         show={showModal}
         onClose={handleModalClose}
         title="비공개 그룹 접근 실패"
         message="비밀번호가 일치하지 않습니다"
+        groupId={groupId}
       />
     </div>
   );

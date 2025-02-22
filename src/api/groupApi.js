@@ -45,6 +45,19 @@ export const verifyGroupPassword = async (groupId, password) => {
   return response.data;
 };
 
+export async function uploadImage(imageFile) {
+  const formData = new FormData();
+  formData.append("image", imageFile);
+
+  const response = await axios.post("/api/image", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data.imageUrl; // 서버가 { imageUrl: "..."} 반환
+}
+
+
 const groupApi = {
   buildGroup,
   fetchGroups,

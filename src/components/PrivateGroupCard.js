@@ -7,6 +7,18 @@ import flowerLikeIcon from "../assets/flowerIcon.png";
 const PrivateGroupCard = ({ group }) => {
   const navigate = useNavigate();
 
+  // D+일 계산 함수 (createdAt으로부터 며칠 지났는지)
+  const getDDay = (createdAt) => {
+    if (!createdAt) return 0;
+    const createdDate = new Date(createdAt);
+    const currentDate = new Date();
+    const diff = currentDate - createdDate; // 밀리초 차이
+    return Math.floor(diff / (1000 * 60 * 60 * 24));
+  };
+
+  // 계산된 D+일
+  const dDayValue = getDDay(group.createdAt);
+
   // 좋아요 수 1000단위 표기 함수
   const formatLikes = (likes) => {
     if (likes >= 1000) {
@@ -15,8 +27,6 @@ const PrivateGroupCard = ({ group }) => {
     return likes;
   };
 
-  // PrivateGroupList에서 계산한 dDay 사용
-  const dDay = group.dDay;
 
   return (
     <div
@@ -26,7 +36,7 @@ const PrivateGroupCard = ({ group }) => {
       <div className="card-content-private">
         {/* 그룹 메타 정보 */}
         <div className="group-meta-private">
-          <span className="d-day">D+{dDay}</span>
+          <span className="d-day">D+{dDayValue}</span>
           <span className="separator">|</span>
           <span className="private-label">비공개</span>
         </div>
@@ -42,7 +52,7 @@ const PrivateGroupCard = ({ group }) => {
 
         {/* 추억 & 그룹 공감 수치 및 아이콘 */}
         <div className="group-stats-private">
-          <span className="stat-value-private">{group.posts}</span>
+          <span className="stat-value-private">{group.postCount}</span>
           <div className="like-container-private">
             <img
               src={flowerLikeIcon}
@@ -50,7 +60,7 @@ const PrivateGroupCard = ({ group }) => {
               className="flower-icon-private"
             />
             <span className="stat-value-private">
-              {formatLikes(group.likes)}
+              {formatLikes(group.likeCount)}
             </span>
           </div>
         </div>
