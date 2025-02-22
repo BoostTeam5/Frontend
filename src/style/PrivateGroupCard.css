@@ -1,111 +1,111 @@
-/* ✅ 전체 요소에 box-sizing 설정 */
+/*  전체 요소에 box-sizing 설정 */
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-/* ✅ 카드 크기 완전 고정 */
+/*  크기 완전 고정 */
 .private-card {
-    width: 375px !important;
-    height: 156px !important;
-    padding: 20px;
-    border: 1px solid #bdb9b9;
-    border-radius: 12px;
-    background: #ffffff;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
+  width: 375px !important;
+  height: 156px !important;
+  padding: 20px;
+  border: 1px solid #bdb9b9;
+  border-radius: 12px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
 }
 
-/* ✅ 카드 콘텐츠 영역 */
+/*  카드 콘텐츠 영역 */
 .card-content-private {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
-/* ✅ D+디데이 및 비공개 표시 */
+/*  D+디데이 및 비공개 표시 */
 .group-meta-private {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: "Spoqa Han Sans Neo";
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 17.53px;
-    letter-spacing: -3%;
-    margin-top : 0px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Spoqa Han Sans Neo";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17.53px;
+  letter-spacing: -3%;
+  margin-top: 0px;
 }
 
 .d-day {
-    color: #282828;
+  color: #282828;
 }
 
 .separator {
-    color: #8D8D8D;
+  color: #8d8d8d;
 }
 
 .private-label {
-    color: #8D8D8D;
+  color: #8d8d8d;
 }
 
-/* ✅ 그룹 제목 (20px 아래 위치) */
+/*  그룹 제목 (20px 아래 위치) */
 .group-title-private {
-    font-family: "Spoqa Han Sans Neo";
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 20.03px;
-    letter-spacing: -3%;
-    color: #282828;
-    margin-top: 20px;
+  font-family: "Spoqa Han Sans Neo";
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20.03px;
+  letter-spacing: -3%;
+  color: #282828;
+  margin-top: 20px;
 }
 
-/* ✅ 추억 & 그룹 공감 텍스트 수평 정렬 (40px 간격) */
+/*  추억 & 그룹 공감 텍스트 수평 정렬 (40px 간격) */
 .group-labels-private {
-    display: flex;
-    justify-content: flex-start;
-    gap: 40px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 40px;
 }
 
 .label-text-private {
-    font-family: "Spoqa Han Sans Neo";
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 15.02px;
-    letter-spacing: -3%;
-    color: #B8B8B8;
+  font-family: "Spoqa Han Sans Neo";
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15.02px;
+  letter-spacing: -3%;
+  color: #b8b8b8;
 }
 
-/* ✅ 추억 & 그룹 공감 숫자 + 아이콘 (맨 아래) */
+/* 추억 & 그룹 공감 숫자 + 아이콘 (맨 아래) */
 .group-stats-private {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
 .stat-value-private {
-    font-family: "Spoqa Han Sans Neo";
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 17.53px;
-    letter-spacing: -3%;
-    color: #282828;
-    margin-top: 5px;
+  font-family: "Spoqa Han Sans Neo";
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17.53px;
+  letter-spacing: -3%;
+  color: #282828;
+  margin-top: 5px;
 }
 
-/* ✅ 그룹 공감 아이콘과 숫자 수평 정렬 (카드 왼쪽 기준 62.4px 고정) */
+/*  그룹 공감 아이콘과 숫자 수평 정렬 (카드 왼쪽 기준 62.4px 고정) */
 .like-container-private {
-    display: flex;
-    align-items: center;
-    gap: 5px; /* ✅ 숫자와 꽃 아이콘 사이 정확한 간격 유지 */
-    position: absolute;  /* ✅ 절대적 위치로 카드 기준 고정 */
-    left: 82.4px;         /* ✅ 카드 왼쪽 기준으로 62.4px 고정 */
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  position: absolute;
+  left: 82.4px;
 }
 
 .flower-icon-private {
-    width: 17.19px;
-    height: 16.48px;
+  width: 17.19px;
+  height: 16.48px;
 }
