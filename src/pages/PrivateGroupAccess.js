@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import PrivateAccessModal from "../components/PrivateAccessModal";
 import "../style/PrivateGroupAccess.css";
 import groupApi from "../api/groupApi";
@@ -9,13 +9,17 @@ const PrivateGroupAccess = () => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const groupId = new URLSearchParams(location.search).get("groupId");
+  //const groupId = new URLSearchParams(location.search).get("groupId");
+  const { groupId } = useParams();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       // ✅ 서버에 평문 비밀번호 전송 후, bcrypt.compare를 통해 서버에서 비교
-      const isPasswordCorrect = await groupApi.verifyGroupPassword(groupId, password);
+      const isPasswordCorrect = await groupApi.verifyGroupPassword(
+        groupId,
+        password
+      );
 
       if (isPasswordCorrect) {
         navigate(`/groups/private/access/${groupId}`);
