@@ -14,15 +14,16 @@ const PrivateGroupAccess = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await groupApi.getGroupDetail(groupId);
-      const correctPassword = response.data.groupPassword;
-      if (password === correctPassword) {
-        navigate(`/api/groups/${groupId}`);
+      // ✅ 서버에 평문 비밀번호 전송 후, bcrypt.compare를 통해 서버에서 비교
+      const isPasswordCorrect = await groupApi.verifyGroupPassword(groupId, password);
+
+      if (isPasswordCorrect) {
+        navigate(`/groups/private/access/${groupId}`);
       } else {
         setShowModal(true);
       }
     } catch (error) {
-      console.error("그룹 정보를 가져오는 중 오류 발생:", error);
+      console.error("비밀번호 검증 중 오류 발생:", error);
       setShowModal(true);
     }
   };
