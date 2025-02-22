@@ -18,6 +18,7 @@ function MemoryDetail() {
   //const postId = parseInt(id, 10);
   const [memoryData, setMemoryData] = useState(null); // 추억 상세 정보
   const [commentCount, setCommentCount] = useState(0);
+  const [likeCount, setLikeCount] = useState(0);
   const navigate = useNavigate();
 
   // 게시글 상세 조회
@@ -27,6 +28,7 @@ function MemoryDetail() {
         const response = await getMemory(postId);
         setMemoryData(response);
         setCommentCount(response.commentCount);
+        setLikeCount(response.likeCount);
         console.log("memoryDetail", response);
       } catch (e) {
         console.error("추억 불러오기 실패", e);
@@ -41,6 +43,11 @@ function MemoryDetail() {
     setCommentCount(newCount);
   };
 
+  // 공감 개수 업데이트
+  const updateLikeCount = (newCount) => {
+    setLikeCount(newCount);
+  };
+
   // 추억 수정 요청
   const handleUpdateMemory = async (updatedMemory) => {
     try {
@@ -53,11 +60,11 @@ function MemoryDetail() {
     }
   };
 
-  // 추억 삭제 요청 -> 문제있음
+  // 추억 삭제 요청
   const handleDeleteMemory = async (password) => {
     try {
       await deleteMemory(postId, password);
-      navigate("/"); // 우선 삭제 후 메인 페이지 이동
+      navigate("/"); // 삭제 후 메인 페이지 이동
     } catch (e) {
       alert("추억 삭제 실패");
     }
@@ -72,6 +79,8 @@ function MemoryDetail() {
           flexDirection: "column",
           alignItems: "center",
           gap: "100px",
+          maxWidth: "100%",
+          paddingBottom: "50px",
         }}
       >
         {memoryData && (
@@ -79,6 +88,8 @@ function MemoryDetail() {
             postId={postId}
             memory={memoryData}
             commentCount={commentCount}
+            likeCount={likeCount}
+            setLikeCount={updateLikeCount}
             onUpdate={handleUpdateMemory} // 수정 요청
             onDelete={handleDeleteMemory} // 삭제 요청
           />

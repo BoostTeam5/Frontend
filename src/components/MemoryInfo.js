@@ -15,7 +15,15 @@ const formatDate = (date) => {
   return dayjs(date).format("YYYY-MM-DD");
 };
 
-function MemoryInfo({ postId, memory, commentCount, onUpdate, onDelete }) {
+function MemoryInfo({
+  postId,
+  memory,
+  likeCount,
+  setLikeCount,
+  commentCount,
+  onUpdate,
+  onDelete,
+}) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [memoryData, setMemoryData] = useState(memory);
@@ -50,6 +58,7 @@ function MemoryInfo({ postId, memory, commentCount, onUpdate, onDelete }) {
     try {
       await likeMemory(postId);
       alert("공감 보내기 성공!");
+      setLikeCount(likeCount + 1);
     } catch (e) {
       console.error("공감 보내기 실패", e);
     }
@@ -73,23 +82,30 @@ function MemoryInfo({ postId, memory, commentCount, onUpdate, onDelete }) {
               {memory.isPublic ? "공개" : "비공개"}
             </span>
           </div>
-          <div style={{ display: "flex", gap: "40px" }}>
+          <div style={{ display: "flex", gap: "30px" }}>
             <TextButton
               onClick={() => setIsEditOpen(true)}
-              style={{ color: "#282828" }}
+              style={{ color: "#282828", fontSize: "16px" }}
             >
               추억 수정하기
             </TextButton>
             <TextButton
               onClick={() => setIsDeleteOpen(true)}
-              style={{ color: "#8d8d8d" }}
+              style={{ color: "#8d8d8d", fontSize: "16px" }}
             >
               추억 삭제하기
             </TextButton>
           </div>
         </div>
-        <h2>{memory.title}</h2>
-        <div style={{ display: "flex", gap: "10px", color: "#b8b8b8" }}>
+        <h2 style={{ fontSize: "30px" }}>{memory.title}</h2>
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            color: "#b8b8b8",
+            fontSize: "18px",
+          }}
+        >
           {tags.map((tag, idx) => (
             <span key={idx}>#{tag}</span>
           ))}
@@ -110,12 +126,14 @@ function MemoryInfo({ postId, memory, commentCount, onUpdate, onDelete }) {
               marginBottom: "10px",
             }}
           >
-            <span>{memory.location}</span>
-            <span>{formatDate(memory.moment)}</span>
+            <span style={{ fontWeight: "bold" }}>{memory.location}</span>
+            <span style={{ fontWeight: "bold" }}>
+              {formatDate(memory.moment)}
+            </span>
 
             <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
               <img src={flowerImg} alt="공감수" style={{ width: "25px" }} />{" "}
-              <span style={{ color: "#8d8d8d" }}>{memory.likeCount}</span>
+              <span style={{ color: "#8d8d8d" }}>{likeCount}</span>
             </div>
             <div style={{ display: "flex", gap: "5px", alignItems: "center" }}>
               <img src={replyCountImg} alt="댓글수" style={{ width: "25px" }} />
@@ -133,8 +151,12 @@ function MemoryInfo({ postId, memory, commentCount, onUpdate, onDelete }) {
       </div>
 
       <Content>
-        <img src={memory.imageUrl} alt="본문 첨부사진" />
-        <p>{memory.content}</p>
+        <img
+          src={memory.imageUrl}
+          alt="본문 첨부사진"
+          style={{ borderRadius: "15px" }}
+        />
+        <p style={{ fontSize: "20px" }}>{memory.content}</p>
       </Content>
 
       {isEditOpen && (

@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import exitImg from "../assets/exit.png";
 import Button from "./Button";
+import { createPortal } from "react-dom";
 
 function Modal({ onClose, onSubmit, modalTitle, children, buttonTitle }) {
-  return (
+  return createPortal(
     <Overlay onClick={onClose}>
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <ModalTitle>{modalTitle}</ModalTitle>
@@ -17,7 +18,8 @@ function Modal({ onClose, onSubmit, modalTitle, children, buttonTitle }) {
           {buttonTitle}
         </SubmitButton>
       </ModalContainer>
-    </Overlay>
+    </Overlay>, 
+    document.getElementById("modal-root")
   );
 }
 
