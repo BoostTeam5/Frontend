@@ -296,7 +296,10 @@
 /* 게시글이 없을 때 */
 .NoImage-groupDetail {
   display: block;
-  margin: 40px auto;
+  /* margin: 40px auto; */
+  margin-left: 700px;
+  width: 230px;
+  height: 230px;
 }
 
 /* 하단 더보기 버튼 영역 */
