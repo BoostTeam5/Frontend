@@ -149,5 +149,4 @@ const MemoryApi = {
   checkPostPw,
   checkGroupPw,
 };
-
 export default MemoryApi;

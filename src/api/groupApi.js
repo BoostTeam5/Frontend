@@ -45,7 +45,6 @@ export const verifyGroupPassword = async (groupId, password) => {
   return response.data;
 };
 
-
 const groupApi = {
   buildGroup,
   fetchGroups,

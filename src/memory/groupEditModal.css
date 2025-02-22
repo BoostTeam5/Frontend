@@ -1,5 +1,5 @@
 /* 모달 오버레이 */
-.modal-overlay {
+.modal-overlay-update {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,17 +12,17 @@
 }
 
 /* 모달 내용 */
-.modal-content {
+.modal-overlay-update .modal-content-update {
   background: white;
   padding: 20px;
-  width: 350px;
+  width: 400px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   position: relative;
 }
 
 /* 닫기 버튼 */
-.close-btn {
+.modal-overlay-update .close-btn {
   position: absolute;
   top: 15px;
   right: 15px;
@@ -33,14 +33,14 @@
 }
 
 /* 입력 필드 스타일 */
-.modal-content label {
+.modal-overlay-update .modal-content-update label {
   display: block;
   margin-top: 15px;
   font-weight: bold;
 }
 
-.modal-content input,
-.modal-content textarea {
+.modal-content-update input,
+.modal-content-update textarea {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -49,13 +49,13 @@
 }
 
 /* 파일 업로드 스타일 */
-.image-upload {
+.modal-overlay-update .image-upload {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.file-btn {
+.modal-overlay-update .file-btn {
   background: #ddd;
   padding: 6px 12px;
   border-radius: 5px;
@@ -63,27 +63,27 @@
 }
 
 /* 토글 스위치 스타일 */
-.toggle-container {
+.modal-overlay-update .toggle-container {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-top: 5px;
 }
 
-.switch {
+.modal-overlay-update .switch {
   position: relative;
   display: inline-block;
   width: 40px;
   height: 20px;
 }
 
-.switch input {
+.modal-overlay-update .switch input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.slider {
+.modal-overlay-update .slider {
   position: absolute;
   top: 0;
   left: 0;
@@ -94,7 +94,7 @@
   border-radius: 20px;
 }
 
-.slider:before {
+.modal-overlay-update .slider:before {
   position: absolute;
   content: "";
   height: 14px;
@@ -106,16 +106,16 @@
   border-radius: 50%;
 }
 
-input:checked + .slider {
-  background-color: #4caf50;
+.modal-overlay-update input:checked + .slider {
+  background-color: black;
 }
 
-input:checked + .slider:before {
+.modal-overlay-update input:checked + .slider:before {
   transform: translateX(18px);
 }
 
 /* 수정 버튼 */
-.submit-btn {
+.modal-overlay-update .submit-btn {
   width: 100%;
   background: black;
   color: white;
@@ -127,6 +127,6 @@ input:checked + .slider:before {
   font-size: 16px;
 }
 
-.submit-btn:hover {
+.modal-overlay-update .submit-btn:hover {
   background: #333;
 }
