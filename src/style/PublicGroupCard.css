@@ -86,7 +86,7 @@
     display: flex;
     justify-content: flex-start;
     gap: 40px;
-    margin-top: 0px;
+    margin-top: 20px;
 }
 
 .label-text {
@@ -135,7 +135,7 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    margin-top: 5px;
+    margin-top: 2px;
   }
   
   .flower-icon {

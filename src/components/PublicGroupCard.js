@@ -2,10 +2,23 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../style/PublicGroupCard.css";
 import flowerLikeIcon from "../assets/flowerIcon.png";
-import contentImg from "../assets/contentImg.png"; // ✅ 335*335 이미지 추가
+import contentImg from "../assets/contentImg2.png"; // ✅ 335*335 이미지 추가
 
 const PublicGroupCard = ({ group }) => {
   const navigate = useNavigate();
+
+  // D+일 계산 함수
+  const getDDay = (createdAt) => {
+    if (!createdAt) return 0;
+    const createdDate = new Date(createdAt);
+    const currentDate = new Date();
+    const diff = currentDate - createdDate; // 밀리초 차이
+    // 일수로 변환
+    return Math.floor(diff / (1000 * 60 * 60 * 24));
+  };
+
+  // 계산된 D+일
+  const dDayValue = getDDay(group.createdAt);
 
   // ✅ 좋아요 수 1000단위 표기 함수
   const formatLikes = (likes) => {
@@ -31,7 +44,7 @@ const PublicGroupCard = ({ group }) => {
 
         {/* ✅ 그룹 메타 정보 */}
         <div className="group-meta">
-          <span className="d-day">D+{group.dDay}</span>
+          <span className="d-day">D+{dDayValue}</span>
           <span className="separator">|</span>
           <span className="public-label">공개</span>
         </div>
@@ -40,7 +53,7 @@ const PublicGroupCard = ({ group }) => {
         <h3 className="group-title">{group.name}</h3>
 
         {/* ✅ 그룹 설명 */}
-        <p className="group-description">{group.description}</p>
+        <p className="group-description">{group.introduction}</p>
 
         {/* ✅ 획득 배지, 추억, 그룹 공감 텍스트 */}
         <div className="group-labels">

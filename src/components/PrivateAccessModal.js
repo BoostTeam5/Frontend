@@ -1,11 +1,22 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "../style/PrivateAccessModal.css";
-import okayButton from "../assets/okay.png"; // ✅ 'okay' 버튼 이미지 사용
+import okayButton from "../assets/okay.png";
 
-const PrivateAccessModal = ({ show, onClose, title, message }) => {
+const PrivateAccessModal = ({ show, groupId, title, message, onClose }) => {
+  const navigate = useNavigate();
+
   if (!show) {
-    return null; // ✅ 모달 표시 여부 제어
+    return null; // 모달 표시 여부 제어
   }
+
+  const handleConfirm = () => {
+    // 저장된 그룹 번호(groupId)를 사용하여 해당 URL로 이동
+    navigate(`/groups/private/access/${groupId}`);
+    if (onClose) {
+      onClose();
+    }
+  };
 
   return (
     <div className="modal-overlay">
@@ -16,7 +27,7 @@ const PrivateAccessModal = ({ show, onClose, title, message }) => {
           src={okayButton}
           alt="확인 버튼"
           className="modal-okay-button-private"
-          onClick={onClose} // ✅ 이미지 클릭 시 모달 닫기
+          onClick={handleConfirm}
         />
       </div>
     </div>

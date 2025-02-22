@@ -13,6 +13,7 @@ const CreateGroup = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [imageUrl, setImageUrl] = useState(null);
+  const [fileName, setFileName] = useState(""); // 파일명 표시용 state 추가
   const [introduction, setIntroduction] = useState("");
   const [isPublic, setIsPublic] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
@@ -20,6 +21,8 @@ const CreateGroup = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
 
   const navigate = useNavigate();
+
+  // 이미지 업로드 핸들러
 
   // 이미지 업로드 핸들러 (파일 검증)
   // const handleImageUpload = (e) => {
@@ -44,6 +47,7 @@ const CreateGroup = () => {
 
     // setIsUploading(true);
     try {
+      setFileName(file.name);
       const response = await MemoryApi.uploadImage(file);
       setImageUrl(response.imageUrl);
       console.log("업로드된 이미지 URL:", response.imageUrl);
@@ -91,7 +95,9 @@ const CreateGroup = () => {
     <div className="create-group-container">
       <h2 className="create-group-title">그룹 만들기</h2>
       {errorMessage && <p className="error-text">{errorMessage}</p>}
+
       <form className="create-group-form" onSubmit={handleCreateGroup}>
+        {/* 그룹명 */}
         <label className="create-group-label">그룹명</label>
         <input
           type="text"
@@ -102,10 +108,30 @@ const CreateGroup = () => {
           required
         />
 
+        {/* 대표 이미지 업로드 */}
         <label className="create-group-label">대표 이미지</label>
-        <input type="file" accept="image/*" onChange={handleImageUpload} />
+        <div className="create-group-image-upload">
+          {/* 파일명 표시 박스 */}
+          <div className="file-display">
+            {fileName ? fileName : "선택된 파일 없음"}
+          </div>
+          {/* 숨겨진 파일 인풋과 파일 선택 버튼 */}
+          <input
+            type="file"
+            id="fileInput"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleImageUpload}
+          />
+          <label htmlFor="fileInput" className="file-button">
+            파일 선택
+          </label>
+        </div>
 
-        <label className="create-group-label">그룹 소개</label>
+        {/* 그룹 소개 */}
+        <label className="create-group-label group-intro-label">
+          그룹 소개
+        </label>
         <textarea
           className="create-group-textarea"
           placeholder="그룹 소개를 입력해 주세요"
@@ -121,8 +147,10 @@ const CreateGroup = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
+
         />
 
+        {/* 공개 여부 토글 */}
         <label className="create-group-label">공개 여부</label>
         <div className="toggle-container">
           <span>{isPublic ? "공개" : "비공개"}</span>
@@ -132,6 +160,19 @@ const CreateGroup = () => {
             onClick={() => setIsPublic(!isPublic)}
           />
         </div>
+{/* 
+        
+        <label className="create-group-label">비밀번호</label>
+        <input
+          type="password"
+          className="create-group-input"
+          placeholder="그룹 비밀번호를 입력해 주세요"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <button type="submit" className="create-group-submit-button"> */}
 
         <button type="submit" onClick={handleCreateGroup}>
           그룹 만들기

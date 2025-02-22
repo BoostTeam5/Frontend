@@ -1,36 +1,41 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import PrivateAccessModal from "../components/PrivateAccessModal";
-import { verifyGroupPassword } from "../api/groupApi";
 import "../style/PrivateGroupAccess.css";
-import privateAccessImg from "../assets/privateAccess.png";
+import groupApi from "../api/groupApi";
 
 const PrivateGroupAccess = () => {
   const [password, setPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const groupId = new URLSearchParams(location.search).get("groupId");
+  //const groupId = new URLSearchParams(location.search).get("groupId");
+  const { groupId } = useParams();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await verifyGroupPassword(groupId, password);
-      // result.valid 또는 result.success 등 백엔드 응답에 맞게 처리
-      if (result.valid) {
-        navigate("/");
+      // ✅ 서버에 평문 비밀번호 전송 후, bcrypt.compare를 통해 서버에서 비교
+      const isPasswordCorrect = await groupApi.verifyGroupPassword(
+        groupId,
+        password
+      );
+
+      if (isPasswordCorrect) {
+        navigate(`/groups/${groupId}`);
       } else {
         setShowModal(true);
       }
     } catch (error) {
-      console.error("비밀번호 검증 오류:", error);
+      console.error("비밀번호 검증 중 오류 발생:", error);
       setShowModal(true);
     }
   };
 
+  // 모달 닫을 때 홈으로 이동하며, state에 isPublic:false와 autoToggle:true 전달
   const handleModalClose = () => {
     setShowModal(false);
-    navigate(`/privateAccess?groupId=${groupId}`);
+    navigate("/", { state: { isPublic: false, autoToggle: true } });
   };
 
   return (
@@ -53,11 +58,13 @@ const PrivateGroupAccess = () => {
           제출하기
         </button>
       </form>
+
       <PrivateAccessModal
         show={showModal}
         onClose={handleModalClose}
         title="비공개 그룹 접근 실패"
         message="비밀번호가 일치하지 않습니다"
+        groupId={groupId}
       />
     </div>
   );
