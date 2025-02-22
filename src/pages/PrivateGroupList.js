@@ -9,7 +9,7 @@ import addGroupIcon from "../assets/addGroup.png";
 import noGroupAlert from "../assets/no_group_alert.png"; // 그룹 없음 이미지
 import addGroupIconLong from "../assets/addGroup_long.png";
 import { useNavigate } from "react-router-dom";
-import { fetchGroups } from "../api/groupApi"; // API 함수 임포트
+import { fetchGroups } from "../api/groupApi"; // API 함수 임포트 
 import api from "../apis/instance";
 
 const PrivateGroupList = ({ group }) => {
